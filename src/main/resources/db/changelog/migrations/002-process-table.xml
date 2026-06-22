@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="002-process-table" author="devjoaopr">
+
+        <createTable tableName="process">
+
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="internal_code" type="bigint"/>
+
+            <column name="folder_number" type="varchar(50)"/>
+
+            <column name="cnj_number" type="varchar(30)"/>
+
+            <column name="old_process_number" type="varchar(80)"/>
+
+            <column name="situation_option_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="process_type_option_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="group_option_id" type="uuid"/>
+
+            <column name="practice_area_option_id" type="uuid"/>
+
+            <column name="action_object_option_id" type="uuid"/>
+
+            <column name="subject_option_id" type="uuid"/>
+
+            <column name="detail_option_id" type="uuid"/>
+
+            <column name="prognosis_option_id" type="uuid"/>
+
+            <column name="conference_option_id" type="uuid"/>
+
+            <column name="partner_option_id" type="uuid"/>
+
+            <column name="origin_option_id" type="uuid"/>
+
+            <column name="phase_option_id" type="uuid"/>
+
+            <column name="locator_option_id" type="uuid"/>
+
+            <column name="court_unit_id" type="uuid"/>
+
+            <column name="county_id" type="uuid"/>
+
+            <column name="state_uf" type="varchar(2)"/>
+
+            <column name="responsible_user_id" type="uuid"/>
+
+            <column name="is_favorite" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="justice_secret" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="capture_movements" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="request_text" type="text"/>
+
+            <column name="observation" type="text"/>
+
+            <column name="created_by_id" type="uuid"/>
+
+            <column name="updated_by_id" type="uuid"/>
+
+            <column name="created_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="timestamp with time zone"/>
+
+            <column name="deleted_at" type="timestamp with time zone"/>
+
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
