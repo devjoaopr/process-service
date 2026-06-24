@@ -2,6 +2,7 @@ package com.process_service.controller;
 
 import com.process_service.dto.ProcessDTO;
 import com.process_service.dto.ProcessResponse;
+import com.process_service.dto.UpdateProcessRequest;
 import com.process_service.services.ProcessService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,22 @@ public class ProcessController {
                 .status(HttpStatus.CREATED)
                 .body(processService.createProcess(dto));
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ProcessResponse> deleteProcess(@PathVariable UUID id) {
-        return ResponseEntity.ok(processService.deleteById(id));
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ProcessResponse> getProcess(@PathVariable UUID id) {
+        return ResponseEntity.ok(processService.findById(id));
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<ProcessResponse> updateProcess(@PathVariable UUID id,@RequestBody @Valid UpdateProcessRequest dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                processService.updateById(id, dto)
+        );
     }
 
 }
