@@ -1,5 +1,6 @@
 package com.process_service.services;
 
+import com.process_service.dto.ProcessFilter;
 import com.process_service.dto.ProcessResponse;
 import com.process_service.dto.ProcessDTO;
 import com.process_service.dto.UpdateProcessRequest;
@@ -11,9 +12,11 @@ import com.process_service.repository.ProcessRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -58,6 +61,25 @@ public class ProcessService {
         Process saved = repository.save(process);
 
         return processMapper.toResponse(saved);
+    }
+
+    public List<ProcessResponse> findAll(ProcessFilter filter) {
+        Specification<Process> spec = Specification.unrestricted();
+        if (filter.cnjNumber() != null && !filter.cnjNumber().isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.like(
+                            cb.lower(root.get("cnj_number")), "%" + filter.cnjNumber() + "%"
+                    )
+            );
+        }
+        if (filter.oldProcessNumber() != null && !filter.oldProcessNumber().isBlank()) {
+            spec = spec.and(((root, query, cb) ->
+                    cb.like(
+                            cb.lower(root.get("oldProcessNumber")), "%" + filter.oldProcessNumber() + "%"
+                    )
+            ));
+        }
+        if (filter.createdById() != null ) {
+        }
     }
 
 }
