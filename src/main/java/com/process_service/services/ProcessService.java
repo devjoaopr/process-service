@@ -6,12 +6,14 @@ import com.process_service.dto.ProcessDTO;
 import com.process_service.dto.UpdateProcessRequest;
 
 import com.process_service.entity.Process;
-import com.process_service.handlers.ResourceNotFoundException;
+import com.process_service.shared.ResourceNotFoundException;
 import com.process_service.mapper.ProcessMapper;
 import com.process_service.repository.ProcessRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -79,11 +81,12 @@ public class ProcessService {
     }
 
     private <T> Specification<Process> inFilter(String field, List<T> values) {
-        if (values == null || values.isEmpty()) return Specification.unrestricted() ;
+        if (values == null || values.isEmpty()) return Specification.unrestricted();
         return (root, query, cb) -> root.get(field).in(values);
     }
-//quickdraw !
-    public List<ProcessResponse> findAll(ProcessFilter filter) {
+
+    //quickdraw !
+    public Page<ProcessResponse> findAll(ProcessFilter filter, Pageable pageable) {
         Specification<Process> spec = Specification.unrestricted();
 
         spec = spec
@@ -119,10 +122,8 @@ public class ProcessService {
                 .and(inFilter("createdById", filter.createdById()))
                 .and(inFilter("updatedById", filter.updatedById()));
 
-        return repository.findAll(spec)
-                .stream()
-                .map(processMapper::toResponse)
-                .toList();
+        return repository.findAll(spec, pageable)
+                .map(processMapper::toResponse);
     }
 
 }

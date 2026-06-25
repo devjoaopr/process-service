@@ -1,9 +1,8 @@
-package com.process_service.handlers;
+package com.process_service.shared;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -52,9 +51,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleException(Exception ex, HttpServletRequest request) {
+        String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+
         List<ApiFieldError> errors = List.of(new ApiFieldError(
                 "requestBody",
-                ex.getCause().getMessage()
+                message
         ));
         ApiError error = new ApiError(
                 Instant.now(),
