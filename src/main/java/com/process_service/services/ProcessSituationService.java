@@ -1,10 +1,8 @@
 package com.process_service.services;
 
 import com.process_service.dto.*;
-import com.process_service.entity.Process;
 import com.process_service.entity.ProcessSituation;
-import com.process_service.handlers.ResourceNotFoundException;
-import com.process_service.mapper.ProcessMapper;
+import com.process_service.shared.ResourceNotFoundException;
 import com.process_service.mapper.ProcessSituationMapper;
 import com.process_service.repository.ProcessSituationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
