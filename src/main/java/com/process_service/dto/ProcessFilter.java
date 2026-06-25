@@ -1,6 +1,7 @@
 package com.process_service.dto;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record ProcessFilter(
@@ -8,21 +9,21 @@ public record ProcessFilter(
         String folderNumber,
         String cnjNumber,
         String oldProcessNumber,
-        UUID situationOptionId,
-        UUID processTypeOptionId,
-        UUID groupOptionId,
-        UUID practiceAreaOptionId,
-        UUID actionObjectOptionId,
-        UUID subjectOptionId,
-        UUID detailOptionId,
-        UUID prognosisOptionId,
-        UUID conferenceOptionId,
-        UUID partnerOptionId,
-        UUID originOptionId,
-        UUID phaseOptionId,
-        UUID locatorOptionId,
-        UUID courtUnitId,
-        UUID countyId,
+        List<UUID> situationOptionId,
+        List<UUID> processTypeOptionId,
+        List<UUID> groupOptionId,
+        List<UUID> practiceAreaOptionId,
+        List<UUID> actionObjectOptionId,
+        List<UUID> subjectOptionId,
+        List<UUID> detailOptionId,
+        List<UUID> prognosisOptionId,
+        List<UUID> conferenceOptionId,
+        List<UUID> partnerOptionId,
+        List<UUID> originOptionId,
+        List<UUID> phaseOptionId,
+        List<UUID> locatorOptionId,
+        List<UUID> courtUnitId,
+        List<UUID> countyId,
         String stateUf,
         UUID responsibleUserId,
         Boolean isFavorite,
@@ -30,8 +31,8 @@ public record ProcessFilter(
         Boolean captureMovements,
         String requestText,
         String observation,
-        UUID createdById,
-        UUID updatedById,
+        List<UUID> createdById,
+        List<UUID> updatedById,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
         OffsetDateTime deletedAt
