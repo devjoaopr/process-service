@@ -1,8 +1,6 @@
 package com.process_service.controller;
 
-import com.process_service.dto.ProcessDTO;
-import com.process_service.dto.ProcessResponse;
-import com.process_service.dto.UpdateProcessRequest;
+import com.process_service.dto.*;
 import com.process_service.services.ProcessService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -10,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -40,10 +39,15 @@ public class ProcessController {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<ProcessResponse> updateProcess(@PathVariable UUID id,@RequestBody @Valid UpdateProcessRequest dto) {
+    public ResponseEntity<ProcessResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateProcessRequest dto) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 processService.updateById(id, dto)
         );
     }
 
+    @GetMapping("/select")
+    public ResponseEntity<List<ProcessResponse>> selectProcess(
+            @ModelAttribute ProcessFilter filter) {
+        return ResponseEntity.ok(processService.findAll(filter));
+    }
 }

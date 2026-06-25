@@ -63,23 +63,66 @@ public class ProcessService {
         return processMapper.toResponse(saved);
     }
 
+    private Specification<Process> likeFilter(String field, String value) {
+        if (value == null || value.isBlank()) return Specification.unrestricted();
+        return (root, query, cb) -> cb.like(cb.lower(root.get(field)), "%" + value.toLowerCase() + "%");
+    }
+
+    private Specification<Process> equalFilter(String field, Object value) {
+        if (value == null) return Specification.unrestricted();
+        return (root, query, cb) -> cb.equal(root.get(field), value);
+    }
+
+    private Specification<Process> dateFilter(String field, OffsetDateTime value) {
+        if (value == null) return Specification.unrestricted();
+        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get(field), value);
+    }
+
+    private <T> Specification<Process> inFilter(String field, List<T> values) {
+        if (values == null || values.isEmpty()) return Specification.unrestricted() ;
+        return (root, query, cb) -> root.get(field).in(values);
+    }
+
     public List<ProcessResponse> findAll(ProcessFilter filter) {
         Specification<Process> spec = Specification.unrestricted();
-        if (filter.cnjNumber() != null && !filter.cnjNumber().isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.like(
-                            cb.lower(root.get("cnj_number")), "%" + filter.cnjNumber() + "%"
-                    )
-            );
-        }
-        if (filter.oldProcessNumber() != null && !filter.oldProcessNumber().isBlank()) {
-            spec = spec.and(((root, query, cb) ->
-                    cb.like(
-                            cb.lower(root.get("oldProcessNumber")), "%" + filter.oldProcessNumber() + "%"
-                    )
-            ));
-        }
-        if (filter.createdById() != null ) {
-        }
+
+        spec = spec
+                .and(likeFilter("cnjNumber", filter.cnjNumber()))
+                .and(likeFilter("oldProcessNumber", filter.oldProcessNumber()))
+                .and(likeFilter("folderNumber", filter.folderNumber()))
+                .and(likeFilter("stateUf", filter.stateUf()))
+                .and(likeFilter("requestText", filter.requestText()))
+                .and(likeFilter("observation", filter.observation()))
+                .and(equalFilter("internalCode", filter.internalCode()))
+                .and(equalFilter("responsibleUserId", filter.responsibleUserId()))
+                .and(equalFilter("isFavorite", filter.isFavorite()))
+                .and(equalFilter("justiceSecret", filter.justiceSecret()))
+                .and(equalFilter("captureMovements", filter.captureMovements()))
+                .and(dateFilter("createdAt", filter.createdAt()))
+                .and(dateFilter("updatedAt", filter.updatedAt()))
+                .and(dateFilter("deletedAt", filter.deletedAt()))
+                .and(inFilter("situationOptionId", filter.situationOptionId()))
+                .and(inFilter("processTypeOptionId", filter.processTypeOptionId()))
+                .and(inFilter("groupOptionId", filter.groupOptionId()))
+                .and(inFilter("practiceAreaOptionId", filter.practiceAreaOptionId()))
+                .and(inFilter("actionObjectOptionId", filter.actionObjectOptionId()))
+                .and(inFilter("subjectOptionId", filter.subjectOptionId()))
+                .and(inFilter("detailOptionId", filter.detailOptionId()))
+                .and(inFilter("prognosisOptionId", filter.prognosisOptionId()))
+                .and(inFilter("conferenceOptionId", filter.conferenceOptionId()))
+                .and(inFilter("partnerOptionId", filter.partnerOptionId()))
+                .and(inFilter("originOptionId", filter.originOptionId()))
+                .and(inFilter("phaseOptionId", filter.phaseOptionId()))
+                .and(inFilter("locatorOptionId", filter.locatorOptionId()))
+                .and(inFilter("courtUnitId", filter.courtUnitId()))
+                .and(inFilter("countyId", filter.countyId()))
+                .and(inFilter("createdById", filter.createdById()))
+                .and(inFilter("updatedById", filter.updatedById()));
+
+        return repository.findAll(spec)
+                .stream()
+                .map(processMapper::toResponse)
+                .toList();
     }
 
 }
