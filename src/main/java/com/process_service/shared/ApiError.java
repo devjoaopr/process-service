@@ -1,4 +1,4 @@
-package com.process_service.handlers;
+package com.process_service.shared;
 
 import java.time.Instant;
 import java.util.List;

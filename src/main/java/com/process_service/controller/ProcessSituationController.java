@@ -3,7 +3,10 @@ package com.process_service.controller;
 
 import com.process_service.dto.*;
 import com.process_service.services.ProcessSituationService;
+import com.process_service.shared.ApiResponseBuilder;
+import com.process_service.shared.StandardResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/process-situation")
 public class ProcessSituationController {
+
+    @Autowired
     public ProcessSituationService processService;
 
     public ProcessSituationController(ProcessSituationService processService) {
@@ -39,9 +44,9 @@ public class ProcessSituationController {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<ProcessSituationResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateProcessSituationRequest dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                processService.updateById(id, dto)
+    public StandardResponse<ProcessSituationResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateProcessSituationRequest dto) {
+        return ApiResponseBuilder.success(
+                processService.updateById(id, dto), "process situation updated"
         );
     }
 

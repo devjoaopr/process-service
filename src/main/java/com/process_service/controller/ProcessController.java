@@ -2,24 +2,27 @@ package com.process_service.controller;
 
 import com.process_service.dto.*;
 import com.process_service.services.ProcessService;
+import com.process_service.shared.ApiResponseBuilder;
+import com.process_service.shared.PageResponse;
+import com.process_service.shared.StandardResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/process")
 public class ProcessController {
 
-    public ProcessService processService;
-
-    public ProcessController(ProcessService processService) {
-        this.processService = processService;
-    }
+    @Autowired
+    ProcessService processService;
 
     @PostMapping("/create")
     public ResponseEntity<ProcessResponse> createProcess(@RequestBody @Valid ProcessDTO dto) {
@@ -39,15 +42,18 @@ public class ProcessController {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<ProcessResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateProcessRequest dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                processService.updateById(id, dto)
+    public StandardResponse<ProcessResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateProcessRequest dto) {
+        return ApiResponseBuilder.success(
+                processService.updateById(id, dto), "process updated correctly"
         );
     }
 
     @GetMapping("/select")
-    public ResponseEntity<List<ProcessResponse>> selectProcess(
-            @ModelAttribute ProcessFilter filter) {
-        return ResponseEntity.ok(processService.findAll(filter));
+    public StandardResponse<PageResponse<ProcessResponse>> findAll(
+            @ModelAttribute ProcessFilter filter,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ApiResponseBuilder.success(
+                PageResponse.of(processService.findAll(filter, pageable)), "process found correctly");
     }
 }

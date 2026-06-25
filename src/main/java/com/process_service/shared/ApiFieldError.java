@@ -1,4 +1,4 @@
-package com.process_service.handlers;
+package com.process_service.shared;
 
 public record ApiFieldError(
         String field,
