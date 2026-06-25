@@ -82,7 +82,7 @@ public class ProcessService {
         if (values == null || values.isEmpty()) return Specification.unrestricted() ;
         return (root, query, cb) -> root.get(field).in(values);
     }
-
+//quickdraw !
     public List<ProcessResponse> findAll(ProcessFilter filter) {
         Specification<Process> spec = Specification.unrestricted();
 
