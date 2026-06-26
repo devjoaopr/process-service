@@ -123,7 +123,7 @@ public class ProcessService {
                 .and(inFilter("updatedById", filter.updatedById()));
 
         return repository.findAll(spec, pageable)
-                .map(processMapper::toResponse).map(processResponse -> );
+                .map(processMapper::toResponse);
     }
 
 }
