@@ -1,25 +1,22 @@
-package com.process_service.dto;
+package com.process_service.dto.Process;
 
 import java.time.OffsetDateTime;
+
+import jakarta.validation.constraints.*;
 import java.util.UUID;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
-public record ProcessDTO(
+public record UpdateProcessRequest(
         UUID id,
         Long internalCode,
         String folderNumber,
-        @Size(max = 30) String cnjNumber,
+        String cnjNumber,
         String oldProcessNumber,
-        @NotNull
         UUID situationOptionId,
-        @NotNull
         UUID processTypeOptionId,
         UUID groupOptionId,
         UUID practiceAreaOptionId,
         UUID actionObjectOptionId,
-        UUID subjectOptionId,
+        String subjectOptionId,
         UUID detailOptionId,
         UUID prognosisOptionId,
         UUID conferenceOptionId,
@@ -29,19 +26,21 @@ public record ProcessDTO(
         UUID locatorOptionId,
         UUID courtUnitId,
         UUID countyId,
+        @Size(max = 2)
         String stateUf,
         UUID responsibleUserId,
-        @NotNull
         Boolean isFavorite,
-        @NotNull
         Boolean justiceSecret,
-        @NotNull
         Boolean captureMovements,
+        @Size(max = 100)
         String requestText,
+        @Size(max = 100)
         String observation,
         UUID createdById,
         UUID updatedById,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
         OffsetDateTime deletedAt
-) {}
+) {
+
+}

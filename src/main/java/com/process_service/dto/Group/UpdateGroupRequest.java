@@ -1,11 +1,15 @@
-package com.process_service.dto;
+package com.process_service.dto.Group;
+
+import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record ProcessSituationResponse(
+public record UpdateGroupRequest(
         UUID id,
+        @Size(max = 150)
         String name,
+        @Size(max = 150)
         String slug,
         String description,
         Boolean active,
@@ -13,6 +17,6 @@ public record ProcessSituationResponse(
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
         OffsetDateTime deletedAt
-) {
 
+) {
 }
