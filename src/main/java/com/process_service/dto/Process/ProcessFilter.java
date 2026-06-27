@@ -1,4 +1,4 @@
-package com.process_service.dto;
+package com.process_service.dto.Process;
 
 import java.time.OffsetDateTime;
 import java.util.List;

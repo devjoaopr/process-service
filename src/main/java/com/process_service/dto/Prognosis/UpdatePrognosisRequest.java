@@ -1,11 +1,11 @@
-package com.process_service.dto;
+package com.process_service.dto.Prognosis;
 
 import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-public record ProcessSituationDTO(
+public record UpdatePrognosisRequest(
         UUID id,
         @Size(max = 150)
         String name,
@@ -17,5 +17,6 @@ public record ProcessSituationDTO(
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
         OffsetDateTime deletedAt
+
 ) {
 }

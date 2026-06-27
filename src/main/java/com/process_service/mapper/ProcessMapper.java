@@ -1,8 +1,8 @@
 package com.process_service.mapper;
 
-import com.process_service.dto.ProcessDTO;
-import com.process_service.dto.ProcessResponse;
-import com.process_service.dto.UpdateProcessRequest;
+import com.process_service.dto.Process.ProcessDTO;
+import com.process_service.dto.Process.ProcessResponse;
+import com.process_service.dto.Process.UpdateProcessRequest;
 import com.process_service.entity.Process;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
