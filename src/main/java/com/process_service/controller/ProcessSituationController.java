@@ -1,12 +1,15 @@
 package com.process_service.controller;
 
 
+import com.process_service.dto.District.DistrictFilter;
+import com.process_service.dto.District.DistrictResponse;
 import com.process_service.dto.ProcessSituation.ProcessSituationDTO;
 import com.process_service.dto.ProcessSituation.ProcessSituationFilter;
 import com.process_service.dto.ProcessSituation.ProcessSituationResponse;
 import com.process_service.dto.ProcessSituation.UpdateProcessSituationRequest;
 import com.process_service.services.ProcessSituationService;
 import com.process_service.shared.ApiResponseBuilder;
+import com.process_service.shared.PageResponse;
 import com.process_service.shared.StandardResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +19,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Tag(name = "Process situation controller", description = "this controller provides CRUD operations for process situation")
+@Tag(name = "Process situation controller.", description = "this controller provides CRUD operations for process situation. (create, read, update, delete, filter)")
 @Controller
 @RequestMapping("/process-situation")
 public class ProcessSituationController {
@@ -39,7 +45,7 @@ public class ProcessSituationController {
     @Operation(summary = "create process situation", description = "creates a new process situation")
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "process situation created correctly",
+            @ApiResponse(responseCode = "201", description = "process wsituation created correctly",
                     content = @Content(schema = @Schema(implementation = ProcessSituationResponse.class))
             ),
             @ApiResponse(responseCode = "404", description = "error creating process situation",
@@ -47,7 +53,7 @@ public class ProcessSituationController {
             )
     })
     @PostMapping("/create")
-    public ResponseEntity<ProcessSituationResponse> createProcess(@RequestBody @Valid ProcessSituationDTO dto) {
+    public ResponseEntity<ProcessSituationResponse> create(@RequestBody @Valid ProcessSituationDTO dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(processService.createProcessSituation(dto));
@@ -62,7 +68,7 @@ public class ProcessSituationController {
             )
     })
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ProcessSituationResponse> deleteProcess(@PathVariable UUID id) {
+    public ResponseEntity<ProcessSituationResponse> delete(@PathVariable UUID id) {
         return ResponseEntity.noContent().build();
     }
 
@@ -75,7 +81,7 @@ public class ProcessSituationController {
             )
     })
     @GetMapping("/get/{id}")
-    public ResponseEntity<ProcessSituationResponse> getProcess(@PathVariable UUID id) {
+    public ResponseEntity<ProcessSituationResponse> get(@PathVariable UUID id) {
         return ResponseEntity.ok(processService.findById(id));
     }
 
@@ -89,7 +95,7 @@ public class ProcessSituationController {
             )
     })
     @PatchMapping("/update/{id}")
-    public StandardResponse<ProcessSituationResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateProcessSituationRequest dto) {
+    public StandardResponse<ProcessSituationResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateProcessSituationRequest dto) {
         return ApiResponseBuilder.success(
                 processService.updateById(id, dto), "process situation updated"
         );
@@ -105,9 +111,11 @@ public class ProcessSituationController {
             )
     })
     @GetMapping("/select")
-    public ResponseEntity<List<ProcessSituationResponse>> selectProcess(
-            @ModelAttribute ProcessSituationFilter filter) {
-
-        return ResponseEntity.ok(processService.filterByInput(filter));
+    public StandardResponse<PageResponse<ProcessSituationResponse>> findAll(
+            @ModelAttribute ProcessSituationFilter filter,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ApiResponseBuilder.success(
+                PageResponse.of(processService.findAll(filter, pageable)), "districts found correctly");
     }
 }

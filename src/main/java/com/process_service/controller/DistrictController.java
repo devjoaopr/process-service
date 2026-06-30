@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@Tag(name = "District controller", description = "This controller provides CRUD operations for districts. (create, read, update, delete, filter)")
+@Tag(name = "District controller.", description = "This controller provides CRUD operations for districts. (create, read, update, delete, filter)")
 @RestController
 @RequestMapping("/district")
 public class DistrictController {
@@ -70,7 +70,7 @@ public class DistrictController {
             )
     })
     @GetMapping("/get/{id}")
-    public StandardResponse<DistrictResponse> getDistrict(@PathVariable UUID id) {
+    public StandardResponse<DistrictResponse> get(@PathVariable UUID id) {
         return ApiResponseBuilder.success(districtService.findById(id), "district found correctly");
     }
 
@@ -84,7 +84,7 @@ public class DistrictController {
             )
     })
     @PatchMapping("/update/{id}")
-    public StandardResponse<DistrictResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateDistrictRequest dto) {
+    public StandardResponse<DistrictResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateDistrictRequest dto) {
         return ApiResponseBuilder.success(
                 districtService.updateById(id, dto), "district updated correctly"
         );

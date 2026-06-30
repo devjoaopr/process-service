@@ -1,13 +1,12 @@
 package com.process_service.mapper;
-
-import com.process_service.dto.ActionObject.ActionObjectDTO;
-import com.process_service.dto.ActionObject.ActionObjectResponse;
-import com.process_service.dto.ActionObject.UpdateActionObjectRequest;
 import com.process_service.dto.Conference.ConferenceDTO;
 import com.process_service.dto.Conference.ConferenceResponse;
 import com.process_service.dto.Conference.UpdateConferenceRequest;
-import com.process_service.entity.ActionObject;
+import com.process_service.dto.District.DistrictDTO;
+import com.process_service.dto.District.DistrictResponse;
+import com.process_service.dto.District.UpdateDistrictRequest;
 import com.process_service.entity.Conference;
+import com.process_service.entity.District;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -20,7 +19,7 @@ public interface ConferenceMapper {
 
     ConferenceResponse toResponse(Conference conference);
 
-    UpdateConferenceRequest toUpdateDistrictRequest(Conference conference);
+    UpdateConferenceRequest UpdateConferenceRequest(Conference conference);
 
-    void UpdateEntityFromDto(UpdateConferenceRequest dto, @MappingTarget Conference entity);
+    void UpdateEntityFromDto(UpdateConferenceRequest dto, @MappingTarget Conference conference);
 }

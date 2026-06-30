@@ -1,9 +1,11 @@
 package com.process_service.dto.Phase;
 
+import java.util.List;
+
 public record PhaseFilter(
-        String description,
-        String name,
+        List<String> description,
+        List<String> name,
         Boolean active,
-        String slug
+        List<String> slug
 ) {
 }
