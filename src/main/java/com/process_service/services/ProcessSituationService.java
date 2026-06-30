@@ -1,11 +1,20 @@
 package com.process_service.services;
 
-import com.process_service.dto.*;
+import com.process_service.dto.Origin.OriginFilter;
+import com.process_service.dto.Origin.OriginResponse;
+import com.process_service.dto.ProcessSituation.ProcessSituationDTO;
+import com.process_service.dto.ProcessSituation.ProcessSituationFilter;
+import com.process_service.dto.ProcessSituation.ProcessSituationResponse;
+import com.process_service.dto.ProcessSituation.UpdateProcessSituationRequest;
+import com.process_service.entity.Origin;
 import com.process_service.entity.ProcessSituation;
 import com.process_service.shared.ResourceNotFoundException;
 import com.process_service.mapper.ProcessSituationMapper;
 import com.process_service.repository.ProcessSituationRepository;
+import com.process_service.shared.SpecificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +45,8 @@ public class ProcessSituationService {
 
     public void deleteById(UUID id) {
         ProcessSituation process = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado"));
-
-        repository.delete(process);
+        process.setDeletedAt(OffsetDateTime.now());
+        repository.save(process);
 
     }
 
@@ -51,49 +60,22 @@ public class ProcessSituationService {
                         "No process found with id " + id));
 
         processMapper.updateEntityFromDto(request, process);
-
+        process.setUpdatedAt(OffsetDateTime.now());
         ProcessSituation saved = repository.save(process);
 
         return processMapper.toResponse(saved);
     }
 
-    public List<ProcessSituationResponse> filterByInput(ProcessSituationFilter filter) {
+    public Page<ProcessSituationResponse> findAll(ProcessSituationFilter filter, Pageable pageable) {
         Specification<ProcessSituation> spec = Specification.unrestricted();
 
-        if (filter.description() != null && !filter.description().isEmpty()) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.like(
-                            criteriaBuilder.lower(root.get("description")),
-                            "%" + filter.description().toLowerCase() + "%"
-                    )
-            );
-        }
+        spec = spec
+                .and(SpecificationUtils.in("description", filter.description()))
+                .and(SpecificationUtils.in("name", filter.name()))
+                .and(SpecificationUtils.in("slug", filter.slug()))
+                .and(SpecificationUtils.equal("active", filter.active()));
 
-        if (filter.name() != null && !filter.name().isBlank()) {
-
-            spec = spec.and((root, query, cb) ->
-                    cb.like(
-                            cb.lower(root.get("name")),
-                            "%" + filter.name().toLowerCase() + "%"
-                    )
-            );
-        }
-
-        if (filter.active() != null) {
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("active"), filter.active())
-            );
-        }
-
-        if (filter.slug() != null && !filter.slug().isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("slug")), "%" + filter.slug().toLowerCase() + "%"));
-        }
-
-
-        return repository.findAll(spec)
-                .stream()
-                .map(processMapper::toResponse)
-                .toList();
+        return repository.findAll(spec, pageable)
+                .map(processMapper::toResponse);
     }
-
 }

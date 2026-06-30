@@ -1,9 +1,9 @@
 package com.process_service.services;
 
-import com.process_service.dto.ProcessFilter;
-import com.process_service.dto.ProcessResponse;
-import com.process_service.dto.ProcessDTO;
-import com.process_service.dto.UpdateProcessRequest;
+import com.process_service.dto.Process.ProcessFilter;
+import com.process_service.dto.Process.ProcessResponse;
+import com.process_service.dto.Process.ProcessDTO;
+import com.process_service.dto.Process.UpdateProcessRequest;
 
 import com.process_service.entity.Process;
 import com.process_service.shared.ResourceNotFoundException;
@@ -59,7 +59,7 @@ public class ProcessService {
                         "No process found with id " + id));
 
         processMapper.updateEntityFromDto(request, process);
-
+        process.setUpdatedAt(OffsetDateTime.now());
         Process saved = repository.save(process);
 
         return processMapper.toResponse(saved);
