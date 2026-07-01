@@ -1,6 +1,5 @@
 package com.process_service.services;
 
-import com.process_service.dto.Conference.ConferenceResponse;
 import com.process_service.dto.District.DistrictDTO;
 import com.process_service.dto.District.DistrictFilter;
 import com.process_service.dto.District.DistrictResponse;
@@ -30,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class DistrictServiceTest {
+class GroupServiceTest {
 
     @Mock
     private DistrictRepository districtRepository;

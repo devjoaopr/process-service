@@ -1,8 +1,10 @@
 package com.process_service.dto.District;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
+
 import java.time.OffsetDateTime;
 
-
+@Builder
 public record UpdateDistrictRequest(
         OffsetDateTime deletedAt,
         OffsetDateTime updatedAt,
