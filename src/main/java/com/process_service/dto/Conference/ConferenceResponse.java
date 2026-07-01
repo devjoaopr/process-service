@@ -1,8 +1,11 @@
 package com.process_service.dto.Conference;
 
+import lombok.Builder;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Builder
 public record ConferenceResponse(
         UUID id,
         String name,
