@@ -1,13 +1,21 @@
 package com.process_service.services;
 
+import com.process_service.dto.ActionObject.ActionObjectDTO;
+import com.process_service.dto.ActionObject.ActionObjectFilter;
+import com.process_service.dto.ActionObject.ActionObjectResponse;
+import com.process_service.dto.ActionObject.UpdateActionObjectRequest;
 import com.process_service.dto.District.DistrictDTO;
 import com.process_service.dto.District.DistrictFilter;
 import com.process_service.dto.District.DistrictResponse;
 import com.process_service.dto.District.UpdateDistrictRequest;
+import com.process_service.entity.ActionObject;
 import com.process_service.entity.District;
+import com.process_service.mapper.ActionObjectMapper;
 import com.process_service.mapper.DistrictMapper;
+import com.process_service.repository.ActionObjectRepository;
 import com.process_service.repository.DistrictRepository;
 import com.process_service.shared.ResourceNotFoundException;
+import com.process_service.shared.SpecificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,76 +30,54 @@ import java.util.UUID;
 public class ActionObjectService {
 
     @Autowired
-    DistrictRepository repository;
+    ActionObjectRepository repository;
     @Autowired
-    DistrictMapper mapper;
+    ActionObjectMapper mapper;
 
 
-    public DistrictResponse createDistrict(DistrictDTO districtDTO) {
+    public ActionObjectResponse createActionObject(ActionObjectDTO actionObjectDTO) {
 
-        District district = mapper.toEntity(districtDTO);
+        ActionObject action = mapper.toEntity(actionObjectDTO);
 
-        district.setId(UUID.randomUUID());
-        district.setCreatedAt(OffsetDateTime.now());
+        action.setId(UUID.randomUUID());
+        action.setCreatedAt(OffsetDateTime.now());
 
-        District saved = repository.save(district);
+        ActionObject saved = repository.save(action);
 
         return mapper.toResponse(saved);
     }
 
     public void deleteById(UUID id) {
-        District district = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
-        district.setDeletedAt(OffsetDateTime.now());
-        repository.delete(district);
+        ActionObject action = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+        action.setDeletedAt(OffsetDateTime.now());
+        repository.delete(action);
 
     }
 
-    public DistrictResponse findById(UUID id) {
+    public ActionObjectResponse findById(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public DistrictResponse updateById(UUID id, UpdateDistrictRequest request) {
-        District district = repository.findById(id)
+    public ActionObjectResponse updateById(UUID id, UpdateActionObjectRequest request) {
+        ActionObject actionObject = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
-        mapper.UpdateEntityFromDto(request, district);
-        district.setUpdatedAt(OffsetDateTime.now());
-        District saved = repository.save(district);
+        mapper.UpdateEntityFromDto(request, actionObject);
+        actionObject.setUpdatedAt(OffsetDateTime.now());
+        ActionObject saved = repository.save(actionObject);
 
         return mapper.toResponse(saved);
     }
 
-    private Specification<District> likeFilter(String field, String value) {
-        if (value == null || value.isBlank()) return Specification.unrestricted();
-        return (root, query, cb) -> cb.like(cb.lower(root.get(field)), "%" + value.toLowerCase() + "%");
-    }
-
-    private Specification<District> equalFilter(String field, Object value) {
-        if (value == null) return Specification.unrestricted();
-        return (root, query, cb) -> cb.equal(root.get(field), value);
-    }
-
-    private Specification<District> dateFilter(String field, OffsetDateTime value) {
-        if (value == null) return Specification.unrestricted();
-        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get(field), value);
-    }
-
-    private <T> Specification<District> inFilter(String field, List<T> values) {
-        if (values == null || values.isEmpty()) return Specification.unrestricted();
-        return (root, query, cb) -> root.get(field).in(values);
-    }
-
-
-    public Page<DistrictResponse> findAll(DistrictFilter filter, Pageable pageable) {
-        Specification<District> spec = Specification.unrestricted();
+    public Page<ActionObjectResponse> findAll(ActionObjectFilter filter, Pageable pageable) {
+        Specification<ActionObject> spec = Specification.unrestricted();
 
         spec = spec
-                .and(inFilter("cnjId", filter.cnjId()))
-                .and(inFilter("internalId", filter.internalId()))
-                .and(inFilter("state", filter.state()))
-                .and(inFilter("slug", filter.slug()))
-                .and(inFilter("tjId", filter.tjId()));
+                .and(SpecificationUtils.in("slug", filter.slug()))
+                .and(SpecificationUtils.in("name", filter.name()))
+                .and(SpecificationUtils.equal("active", filter.active()))
+                .and(SpecificationUtils.in("description", filter.description()));
 
         return repository.findAll(spec, pageable)
                 .map(mapper::toResponse);

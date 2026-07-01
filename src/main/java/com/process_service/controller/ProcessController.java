@@ -8,6 +8,7 @@ import com.process_service.services.ProcessService;
 import com.process_service.shared.ApiResponseBuilder;
 import com.process_service.shared.PageResponse;
 import com.process_service.shared.StandardResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "Process controller.", description = "This controller provides CRUD operations for process. (create, read, update, delete, filter)")
 @RestController
 @RequestMapping("/process")
 public class ProcessController {

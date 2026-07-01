@@ -1,9 +1,11 @@
 package com.process_service.dto.ActionObject;
 
+import java.util.List;
+
 public record ActionObjectFilter(
-        String description,
-        String name,
+        List<String> description,
+        List<String> name,
         Boolean active,
-        String slug
+        List<String> slug
 ) {
 }

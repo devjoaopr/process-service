@@ -1,12 +1,9 @@
 package com.process_service.mapper;
 
-import com.process_service.dto.PracticeArea.PracticeAreaDTO;
-import com.process_service.dto.PracticeArea.PracticeAreaResponse;
-import com.process_service.dto.PracticeArea.UpdatePracticeAreaRequest;
 import com.process_service.dto.Prognosis.PrognosisDTO;
 import com.process_service.dto.Prognosis.PrognosisResponse;
 import com.process_service.dto.Prognosis.UpdatePrognosisRequest;
-import com.process_service.entity.PracticeArea;
+
 import com.process_service.entity.Prognosis;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -20,7 +17,7 @@ public interface PrognosisMapper {
 
     PrognosisResponse toResponse(Prognosis prognosis);
 
-    UpdatePrognosisRequest toUpdateDistrictRequest(Prognosis prognosis);
+    UpdatePrognosisRequest toUpdatePrognosisRequest(Prognosis prognosis);
 
-    void UpdateEntityFromDto(UpdatePrognosisRequest dto, @MappingTarget Prognosis entity);
+    void UpdateEntityFromDto(UpdatePrognosisRequest dto, @MappingTarget Prognosis conference);
 }

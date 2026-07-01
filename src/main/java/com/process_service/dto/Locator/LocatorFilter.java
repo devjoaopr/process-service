@@ -1,9 +1,11 @@
 package com.process_service.dto.Locator;
 
+import java.util.List;
+
 public record LocatorFilter(
-        String description,
-        String name,
+        List<String> description,
+        List<String> name,
         Boolean active,
-        String slug
+        List<String> slug
 ) {
 }

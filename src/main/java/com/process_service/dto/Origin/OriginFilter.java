@@ -1,9 +1,11 @@
 package com.process_service.dto.Origin;
 
+import java.util.List;
+
 public record OriginFilter(
-        String description,
-        String name,
+        List<String> description,
+        List<String> name,
         Boolean active,
-        String slug
+        List<String> slug
 ) {
 }
