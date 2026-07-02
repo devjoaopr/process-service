@@ -1,10 +1,12 @@
 package com.process_service.dto.SubjectOption;
 
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Builder
 public record SubjectOptionDTO(
         UUID id,
         @Size(max = 150)

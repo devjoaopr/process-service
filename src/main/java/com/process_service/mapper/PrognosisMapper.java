@@ -20,4 +20,5 @@ public interface PrognosisMapper {
     UpdatePrognosisRequest toUpdatePrognosisRequest(Prognosis prognosis);
 
     void UpdateEntityFromDto(UpdatePrognosisRequest dto, @MappingTarget Prognosis conference);
+
 }

@@ -1,19 +1,27 @@
 package com.process_service.services;
 
 import com.process_service.dto.ProcessSituation.ProcessSituationDTO;
+import com.process_service.dto.ProcessSituation.ProcessSituationFilter;
 import com.process_service.dto.ProcessSituation.ProcessSituationResponse;
 import com.process_service.dto.ProcessSituation.UpdateProcessSituationRequest;
 import com.process_service.entity.ProcessSituation;
 import com.process_service.mapper.ProcessSituationMapper;
 import com.process_service.repository.ProcessSituationRepository;
 import com.process_service.shared.ResourceNotFoundException;
+import com.process_service.shared.SpecificationUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -171,6 +179,76 @@ class ProcessServiceTest {
         assertNotNull(process.getUpdatedAt());
         verify(processMapper).updateEntityFromDto(updated, process);
         verify(processRepository).save(process);
+    }
+
+    @Test
+    public void updateById_WhenProcessSituationNotExists_UpdateProcessSituation() {
+        UUID id = UUID.randomUUID();
+
+        UpdateProcessSituationRequest updated = UpdateProcessSituationRequest.builder()
+                .updatedAt(OffsetDateTime.now())
+                .name("testing")
+                .slug("test")
+                .build();
+
+
+        when(processRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> processService.updateById(id, updated));
+        verify(processRepository, never()).save(any());
+        verify(processMapper, never()).updateEntityFromDto(any(), any());
+    }
+
+    @Test
+    void findAll_WhenProcessSituationExists_FindAllProcessSituation() {
+
+        ProcessSituationFilter filter = new ProcessSituationFilter(
+                List.of("some description"),
+                List.of("testing"),
+                true,
+                List.of("test-slug")
+        );
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        ProcessSituation process = ProcessSituation.builder()
+                .id(UUID.randomUUID())
+                .name("testing")
+                .build();
+
+        ProcessSituationResponse  response = ProcessSituationResponse.builder()
+                .name("testing")
+                .build();
+
+        Page<ProcessSituation> page = new PageImpl<>(List.of(process));
+
+        when(processRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+        when(processMapper.toResponse(process)).thenReturn(response);
+
+        Page<ProcessSituationResponse> result = processService.findAll(filter, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("testing", result.getContent().getFirst().name());
+        verify(processRepository).findAll(any(Specification.class), eq(pageable));
+    }
+
+    @Test
+    void findAll_WhenProcessSituationNotExists_FindAllProcessSituation() {
+        ProcessSituationFilter filter = new ProcessSituationFilter(
+                null, null, null, null
+        );
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<ProcessSituation> page = new PageImpl<>(List.of());
+
+        when(processRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+
+        Page<ProcessSituationResponse> result = processService.findAll(filter, pageable);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(processMapper, never()).toResponse(any());
     }
 
 }

@@ -1,8 +1,11 @@
 package com.process_service.dto.District;
 
+import lombok.Builder;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Builder
 public record DistrictResponse(
         OffsetDateTime deletedAt,
         OffsetDateTime updatedAt,

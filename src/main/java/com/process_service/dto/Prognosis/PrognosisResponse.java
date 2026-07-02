@@ -1,8 +1,11 @@
 package com.process_service.dto.Prognosis;
 
+import lombok.Builder;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Builder
 public record PrognosisResponse(
         UUID id,
         String name,

@@ -1,9 +1,13 @@
 package com.process_service.dto.Phase;
 
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
+@Builder
 
 public record UpdatePhaseRequest(
         UUID id,
