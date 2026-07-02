@@ -4,9 +4,16 @@ import com.process_service.dto.District.DistrictDTO;
 import com.process_service.dto.District.DistrictFilter;
 import com.process_service.dto.District.DistrictResponse;
 import com.process_service.dto.District.UpdateDistrictRequest;
+import com.process_service.dto.Group.GroupDTO;
+import com.process_service.dto.Group.GroupFilter;
+import com.process_service.dto.Group.GroupResponse;
+import com.process_service.dto.Group.UpdateGroupRequest;
 import com.process_service.entity.District;
+import com.process_service.entity.Group;
 import com.process_service.mapper.DistrictMapper;
+import com.process_service.mapper.GroupMapper;
 import com.process_service.repository.DistrictRepository;
+import com.process_service.repository.GroupRepository;
 import com.process_service.shared.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,96 +39,95 @@ import static org.mockito.Mockito.*;
 class GroupServiceTest {
 
     @Mock
-    private DistrictRepository districtRepository;
+    private GroupRepository repository;
 
     @Mock
-    private DistrictMapper districtMapper;
+    private GroupMapper mapper;
 
     @InjectMocks
-    private DistrictService districtService;
+    private GroupService service;
 
     @Test
-    public void districtService_createDistrictService_ReturnsDistrictDTO() {
+    public void groupService_createGroupService_ReturnsGroupDTO() {
 
-        DistrictDTO dto = DistrictDTO.builder()
-                .active(true)
-                .judicialRank("testing-judicial")
-                .cnjId("testing-cnj")
-                .tjId("testing-tj")
-                .internalId("testing-internal")
-                .slug("testing-slug")
-                .state("testing-state")
+        GroupDTO dto = GroupDTO.builder()
+                .id(UUID.randomUUID())
                 .name("testing-name")
+                .slug("testing-slug")
+                .description("testing-description")
+                .active(true)
+                .displayOrder(1)
+                .createdAt(OffsetDateTime.now())
                 .build();
 
 
-        District entity = District.builder()
+        Group group = Group.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        DistrictResponse response = DistrictResponse.builder()
+        GroupResponse response = GroupResponse.builder()
                 .build();
 
-        when(districtMapper.toEntity(dto)).thenReturn(entity);
-        when(districtRepository.save(any(District.class))).thenReturn(entity);
-        when(districtMapper.toResponse(entity)).thenReturn(response);
+        when(mapper.toEntity(dto)).thenReturn(group);
+        when(repository.save(any(Group.class))).thenReturn(group);
+        when(mapper.toResponse(group)).thenReturn(response);
 
-        DistrictResponse result = districtService.createDistrict(dto);
+        GroupResponse result = service.createGroup(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
     }
 
     @Test
-    public void deleteById_WhenDistrictExists_DeleteDistrict() {
+    public void deleteById_WhenGroupExists_DeleteGroup() {
         UUID id = UUID.randomUUID();
 
-        District process = District.builder()
+        Group group = Group.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        when(districtRepository.findById(id)).thenReturn(Optional.of(process));
+        when(repository.findById(id)).thenReturn(Optional.of(group));
 
-        districtRepository.deleteById(id);
+        repository.deleteById(id);
 
-        assertNotNull(process.getDeletedAt());
+        assertNotNull(group.getDeletedAt());
 
-        verify(districtRepository).save(process);
+        verify(repository).save(group);
 
     }
 
     @Test
-    public void deleteById_WhenDistrictNotExists_DeleteDistrict() {
+    public void deleteById_WhenGroupNotExists_DeleteGroup() {
         UUID id = UUID.randomUUID();
 
-        when(districtRepository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> districtService.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
 
-        verify(districtRepository, never()).save(any());
+        verify(repository, never()).save(any());
     }
 
     @Test
-    public void findById_WhenDistrictExists_FindDistrict() {
+    public void findById_WhenDistrictExists_FindGroup() {
         UUID id = UUID.randomUUID();
 
-        District situation = District.builder()
+        Group group = Group.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        DistrictResponse response = DistrictResponse.builder()
+        GroupResponse response = GroupResponse.builder()
                 .name("testing")
                 .build();
 
-        when(districtRepository.findById(id)).thenReturn(Optional.of(situation));
-        when(districtMapper.toResponse(situation)).thenReturn(response);
+        when(repository.findById(id)).thenReturn(Optional.of(group));
+        when(mapper.toResponse(group)).thenReturn(response);
 
-        DistrictResponse result = districtService.findById(id);
+        GroupResponse result = service.findById(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -129,148 +135,137 @@ class GroupServiceTest {
     }
 
     @Test
-    public void findById_WhenDistrictNotExists_FindDistrict() {
+    public void findById_WhenGroupNotExists_FindGroup() {
         UUID id = UUID.randomUUID();
 
-        when(districtRepository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> districtService.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
 
-        verify(districtRepository, never()).save(any());
+        verify(repository, never()).save(any());
     }
 
     @Test
-    public void updateById_WhenDistrictExists_District() {
+    public void updateById_WhenGroupExists_Group() {
         UUID id = UUID.randomUUID();
 
-        UpdateDistrictRequest updated = UpdateDistrictRequest.builder()
+        UpdateGroupRequest updated = UpdateGroupRequest.builder()
+                .id(UUID.randomUUID())
+                .name("testing-name")
+                .slug("testing-slug")
+                .description("testing-description")
+                .active(true)
+                .displayOrder(1)
                 .createdAt(OffsetDateTime.now())
-                .active(true)
-                .judicialRank("testing-judicial")
-                .cnjId("testing-cnj")
-                .tjId("testing-tj")
-                .internalId("testing-internal")
-                .slug("testing-slug")
-                .state("testing-state")
-                .name("testing-name")
                 .build();
 
-        District actionObject = District.builder()
+        Group group = Group.builder()
+                .id(UUID.randomUUID())
+                .name("testing-name")
+                .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
-                .active(true)
-                .judicialRank("testing-judicial")
-                .cnjId("testing-cnj")
-                .tjId("testing-tj")
-                .internalId("testing-internal")
-                .slug("testing-slug")
-                .state("testing-state")
-                .name("testing-name")
                 .build();
 
-        District saved = District.builder()
+        Group saved = Group.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        DistrictResponse response = DistrictResponse.builder()
-                .active(true)
-                .judicialRank("testing-judicial")
-                .cnjId("testing-cnj")
-                .tjId("testing-tj")
-                .internalId("testing-internal")
-                .slug("testing-slug")
-                .state("testing-state")
+        GroupResponse response = GroupResponse.builder()
+                .id(UUID.randomUUID())
                 .name("testing-name")
+                .slug("testing-slug")
+                .description("testing-description")
+                .active(true)
+                .displayOrder(2)
+                .createdAt(OffsetDateTime.now())
+                .updatedAt(OffsetDateTime.now())
                 .build();
 
-        when(districtRepository.findById(id)).thenReturn(Optional.of(actionObject));
-        doNothing().when(districtMapper).UpdateEntityFromDto(updated, actionObject);
-        when(districtRepository.save(actionObject)).thenReturn(saved);
-        when(districtMapper.toResponse(saved)).thenReturn(response);
+        when(repository.findById(id)).thenReturn(Optional.of(group));
+        doNothing().when(mapper).UpdateEntityFromDto(updated, group);
+        when(repository.save(group)).thenReturn(saved);
+        when(mapper.toResponse(saved)).thenReturn(response);
 
-        DistrictResponse result = districtService.updateById(id, updated);
+        GroupResponse result = service.updateById(id, updated);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
-        assertNotNull(actionObject.getUpdatedAt());
-        verify(districtMapper).UpdateEntityFromDto(updated, actionObject);
-        verify(districtRepository).save(actionObject);
+        assertNotNull(group.getUpdatedAt());
+        verify(mapper).UpdateEntityFromDto(updated, group);
+        verify(repository).save(group);
     }
 
     @Test
-    public void updateById_WhenDistrictNotExists_UpdateDistrict() {
+    public void updateById_WhenGroupNotExists_UpdateGroup() {
         UUID id = UUID.randomUUID();
 
-        UpdateDistrictRequest updated = UpdateDistrictRequest.builder()
+        UpdateGroupRequest updated = UpdateGroupRequest.builder()
                 .updatedAt(OffsetDateTime.now())
                 .name("testing")
                 .slug("test")
                 .build();
 
 
-        when(districtRepository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> districtService.updateById(id, updated));
-        verify(districtRepository, never()).save(any());
-        verify(districtMapper, never()).UpdateEntityFromDto(any(), any());
+        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        verify(repository, never()).save(any());
+        verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }
 
     @Test
-    void findAll_WhenDistrictsExists_FindAllDistricts() {
+    void findAll_WhenGroupExists_FindAllGroup() {
 
-        DistrictFilter filter = new DistrictFilter(
-                null,
-                null,
-                null,
+        GroupFilter filter = new GroupFilter(
+                List.of("testing"),
+                List.of("name"),
                 true,
-                "testing",
-                List.of("testing-cnj"),
-                List.of("testing-tj"),
-                List.of("testing-internal"),
-                List.of("testing-slug"),
-                List.of("testing-state"),
-                ("stand")
+                List.of("slug")
         );
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        District district = District.builder()
+        Group group = Group.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
 
-        DistrictResponse response = DistrictResponse.builder()
+        GroupResponse response = GroupResponse.builder()
                 .name("testing")
                 .build();
 
-        Page<District> page = new PageImpl<>(List.of(district));
+        Page<Group> page = new PageImpl<>(List.of(group));
 
-        when(districtRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
-        when(districtMapper.toResponse(district)).thenReturn(response);
+        when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+        when(mapper.toResponse(group)).thenReturn(response);
 
-        Page<DistrictResponse> result = districtService.findAll(filter, pageable);
+        Page<GroupResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals("testing", result.getContent().getFirst().name());
-        verify(districtRepository).findAll(any(Specification.class), eq(pageable));
+        verify(repository).findAll(any(Specification.class), eq(pageable));
     }
 
     @Test
-    void findAll_WhenDistrictNotExists_FindAllDistricts() {
-        DistrictFilter filter = new DistrictFilter(
-                null, null, null, null, null, null, null, null, null, null, null
-                );
+    void findAll_WhenGroupNotExists_FindAllGroup() {
+        GroupFilter filter = new GroupFilter(
+                null,
+                null,
+                null,
+                null
+        );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<District> page = new PageImpl<>(List.of());
+        Page<Group> page = new PageImpl<>(List.of());
 
-        when(districtRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+        when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
-        Page<DistrictResponse> result = districtService.findAll(filter, pageable);
+        Page<GroupResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
-        verify(districtMapper, never()).toResponse(any());
+        verify(mapper, never()).toResponse(any());
     }
 }

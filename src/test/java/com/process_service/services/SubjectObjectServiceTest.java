@@ -1,13 +1,9 @@
 package com.process_service.services;
 
-import com.process_service.dto.District.DistrictFilter;
-import com.process_service.dto.Locator.LocatorDTO;
-import com.process_service.dto.Locator.LocatorFilter;
-import com.process_service.dto.Locator.LocatorResponse;
-import com.process_service.dto.Locator.UpdateLocatorRequest;
-import com.process_service.entity.Locator;
-import com.process_service.mapper.LocatorMapper;
-import com.process_service.repository.LocatorRepository;
+import com.process_service.dto.SubjectOption.*;
+import com.process_service.entity.SubjectOption;
+import com.process_service.mapper.SubjectOptionMapper;
+import com.process_service.repository.SubjectOptionRepository;
 import com.process_service.shared.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,71 +24,69 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
-class LocatorServiceTest {
+class SubjectOptionServiceTest {
 
     @Mock
-    private LocatorRepository repository;
+    private SubjectOptionRepository repository;
 
     @Mock
-    private LocatorMapper mapper;
+    private SubjectOptionMapper mapper;
 
     @InjectMocks
-    private LocatorService service;
+    private SubjectOptionService service;
 
     @Test
-    public void locatorService_createLocatorService_ReturnsLocatorDTO() {
+    public void subjectOptionService_createSubjectOptionService_ReturnsSubjectOptionDTO() {
 
-        LocatorDTO dto = LocatorDTO.builder()
+        SubjectOptionDTO dto = SubjectOptionDTO.builder()
                 .id(UUID.randomUUID())
-                .name("testing-locator")
+                .name("testing-subject-option")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-
-        Locator entity = Locator.builder()
+        SubjectOption entity = SubjectOption.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        SubjectOptionResponse response = SubjectOptionResponse.builder()
+                .name("testing")
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Locator.class))).thenReturn(entity);
+        when(repository.save(any(SubjectOption.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
-        LocatorResponse result = service.create(dto);
+        SubjectOptionResponse result = service.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
     }
 
     @Test
-    public void deleteById_WhenLocatorExists_DeleteLocator() {
+    public void deleteById_WhenSubjectOptionExists_DeleteSubjectOption() {
         UUID id = UUID.randomUUID();
 
-        Locator process = Locator.builder()
+        SubjectOption subjectOption = SubjectOption.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(process));
+        when(repository.findById(id)).thenReturn(Optional.of(subjectOption));
 
-        repository.deleteById(id);
+        service.deleteById(id);
 
-        assertNotNull(process.getDeletedAt());
+        assertNotNull(subjectOption.getDeletedAt());
 
-        verify(repository).save(process);
-
+        verify(repository).save(subjectOption);
     }
 
     @Test
-    public void deleteById_WhenLocatorNotExists_DeleteLocator() {
+    public void deleteById_WhenSubjectOptionNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -103,30 +97,29 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void findById_WhenLocatorExists_FindLocator() {
+    public void findById_WhenSubjectOptionExists_FindSubjectOption() {
         UUID id = UUID.randomUUID();
 
-        Locator situation = Locator.builder()
+        SubjectOption subjectOption = SubjectOption.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        SubjectOptionResponse response = SubjectOptionResponse.builder()
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(situation));
-        when(mapper.toResponse(situation)).thenReturn(response);
+        when(repository.findById(id)).thenReturn(Optional.of(subjectOption));
+        when(mapper.toResponse(subjectOption)).thenReturn(response);
 
-        LocatorResponse result = service.findById(id);
+        SubjectOptionResponse result = service.findById(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
-
     }
 
     @Test
-    public void findById_WhenLocatorNotExists_FindLocator() {
+    public void findById_WhenSubjectOptionNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -137,65 +130,58 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void updateById_WhenLocatorExists_Locator() {
+    public void updateById_WhenSubjectOptionExists_UpdateSubjectOption() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
-                .id(id)
-                .name("testing-name")
-                .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(1)
-                .updatedAt(OffsetDateTime.now())
-                .build();
-
-        Locator locator = Locator.builder()
+        UpdateSubjectOptionRequest updated = UpdateSubjectOptionRequest.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Locator saved = Locator.builder()
+        SubjectOption subjectOption = SubjectOption.builder()
+                .id(id)
+                .name("testing-name")
+                .slug("testing-slug")
+                .updatedAt(OffsetDateTime.now())
+                .build();
+
+        SubjectOption saved = SubjectOption.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        SubjectOptionResponse response = SubjectOptionResponse.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(2)
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(locator));
-        doNothing().when(mapper).UpdateEntityFromDto(updated, locator);
-        when(repository.save(locator)).thenReturn(saved);
+        when(repository.findById(id)).thenReturn(Optional.of(subjectOption));
+        doNothing().when(mapper).UpdateEntityFromDto(updated, subjectOption);
+        when(repository.save(subjectOption)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        LocatorResponse result = service.updateById(id, updated);
+        SubjectOptionResponse result = service.updateById(id, updated);
 
         assertNotNull(result);
-        assertEquals("testing", result.name());
-        assertNotNull(locator.getUpdatedAt());
-        verify(mapper).UpdateEntityFromDto(updated, locator);
-        verify(repository).save(locator);
+        assertEquals("testing-name", result.name());
+        assertNotNull(subjectOption.getUpdatedAt());
+        verify(mapper).UpdateEntityFromDto(updated, subjectOption);
+        verify(repository).save(subjectOption);
     }
 
     @Test
-    public void updateById_WhenLocatorNotExists_UpdateLocator() {
+    public void updateById_WhenSubjectOptionNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
+        UpdateSubjectOptionRequest updated = UpdateSubjectOptionRequest.builder()
                 .updatedAt(OffsetDateTime.now())
                 .name("testing")
                 .slug("test")
                 .build();
-
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
@@ -205,9 +191,9 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorExists_FindAllLocators() {
+    void findAll_WhenSubjectOptionExists_FindAllSubjectOptions() {
 
-        LocatorFilter filter = new LocatorFilter(
+        SubjectOptionFilter filter = new SubjectOptionFilter(
                 List.of("description"),
                 List.of("name"),
                 true,
@@ -216,21 +202,21 @@ class LocatorServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Locator locator = Locator.builder()
+        SubjectOption subjectOption = SubjectOption.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        SubjectOptionResponse response = SubjectOptionResponse.builder()
                 .name("testing")
                 .build();
 
-        Page<Locator> page = new PageImpl<>(List.of(locator));
+        Page<SubjectOption> page = new PageImpl<>(List.of(subjectOption));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
-        when(mapper.toResponse(locator)).thenReturn(response);
+        when(mapper.toResponse(subjectOption)).thenReturn(response);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<SubjectOptionResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -239,17 +225,17 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorNotExists_FindAllLocators() {
-        LocatorFilter filter = new LocatorFilter(
+    void findAll_WhenSubjectOptionNotExists_ReturnsEmptyPage() {
+        SubjectOptionFilter filter = new SubjectOptionFilter(
                 null, null, null, null
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Locator> page = new PageImpl<>(List.of());
+        Page<SubjectOption> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<SubjectOptionResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

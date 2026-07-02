@@ -1,13 +1,8 @@
 package com.process_service.services;
-
-import com.process_service.dto.District.DistrictFilter;
-import com.process_service.dto.Locator.LocatorDTO;
-import com.process_service.dto.Locator.LocatorFilter;
-import com.process_service.dto.Locator.LocatorResponse;
-import com.process_service.dto.Locator.UpdateLocatorRequest;
-import com.process_service.entity.Locator;
-import com.process_service.mapper.LocatorMapper;
-import com.process_service.repository.LocatorRepository;
+import com.process_service.dto.Origin.*;
+import com.process_service.entity.Origin;
+import com.process_service.repository.OriginRepository;
+import com.process_service.mapper.OriginMapper;
 import com.process_service.shared.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,69 +25,68 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class LocatorServiceTest {
+class OriginServiceTest {
 
     @Mock
-    private LocatorRepository repository;
+    private OriginRepository repository;
 
     @Mock
-    private LocatorMapper mapper;
+    private OriginMapper mapper;
 
     @InjectMocks
-    private LocatorService service;
+    private OriginService service;
 
     @Test
-    public void locatorService_createLocatorService_ReturnsLocatorDTO() {
+    public void originService_createOriginService_ReturnsOriginDTO() {
 
-        LocatorDTO dto = LocatorDTO.builder()
+        OriginDTO dto = OriginDTO.builder()
                 .id(UUID.randomUUID())
-                .name("testing-locator")
+                .name("testing-origin")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-
-        Locator entity = Locator.builder()
+        Origin entity = Origin.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        OriginResponse response = OriginResponse.builder()
+                .name("testing")
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Locator.class))).thenReturn(entity);
+        when(repository.save(any(Origin.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
-        LocatorResponse result = service.create(dto);
+        OriginResponse result = service.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
     }
 
     @Test
-    public void deleteById_WhenLocatorExists_DeleteLocator() {
+    public void deleteById_WhenOriginExists_DeleteOrigin() {
         UUID id = UUID.randomUUID();
 
-        Locator process = Locator.builder()
+        Origin origin = Origin.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(process));
+        when(repository.findById(id)).thenReturn(Optional.of(origin));
 
-        repository.deleteById(id);
+        service.deleteById(id);
 
-        assertNotNull(process.getDeletedAt());
+        assertNotNull(origin.getDeletedAt());
 
-        verify(repository).save(process);
-
+        verify(repository).save(origin);
     }
 
     @Test
-    public void deleteById_WhenLocatorNotExists_DeleteLocator() {
+    public void deleteById_WhenOriginNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -103,30 +97,29 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void findById_WhenLocatorExists_FindLocator() {
+    public void findById_WhenOriginExists_FindOrigin() {
         UUID id = UUID.randomUUID();
 
-        Locator situation = Locator.builder()
+        Origin origin = Origin.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        OriginResponse response = OriginResponse.builder()
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(situation));
-        when(mapper.toResponse(situation)).thenReturn(response);
+        when(repository.findById(id)).thenReturn(Optional.of(origin));
+        when(mapper.toResponse(origin)).thenReturn(response);
 
-        LocatorResponse result = service.findById(id);
+        OriginResponse result = service.findById(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
-
     }
 
     @Test
-    public void findById_WhenLocatorNotExists_FindLocator() {
+    public void findById_WhenOriginNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -137,65 +130,58 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void updateById_WhenLocatorExists_Locator() {
+    public void updateById_WhenOriginExists_UpdateOrigin() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
-                .id(id)
-                .name("testing-name")
-                .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(1)
-                .updatedAt(OffsetDateTime.now())
-                .build();
-
-        Locator locator = Locator.builder()
+        UpdateOriginRequest updated = UpdateOriginRequest.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Locator saved = Locator.builder()
+        Origin origin = Origin.builder()
+                .id(id)
+                .name("testing-name")
+                .slug("testing-slug")
+                .updatedAt(OffsetDateTime.now())
+                .build();
+
+        Origin saved = Origin.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        OriginResponse response = OriginResponse.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(2)
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(locator));
-        doNothing().when(mapper).UpdateEntityFromDto(updated, locator);
-        when(repository.save(locator)).thenReturn(saved);
+        when(repository.findById(id)).thenReturn(Optional.of(origin));
+        doNothing().when(mapper).UpdateEntityFromDto(updated, origin);
+        when(repository.save(origin)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        LocatorResponse result = service.updateById(id, updated);
+        OriginResponse result = service.updateById(id, updated);
 
         assertNotNull(result);
-        assertEquals("testing", result.name());
-        assertNotNull(locator.getUpdatedAt());
-        verify(mapper).UpdateEntityFromDto(updated, locator);
-        verify(repository).save(locator);
+        assertEquals("testing-name", result.name());
+        assertNotNull(origin.getUpdatedAt());
+        verify(mapper).UpdateEntityFromDto(updated, origin);
+        verify(repository).save(origin);
     }
 
     @Test
-    public void updateById_WhenLocatorNotExists_UpdateLocator() {
+    public void updateById_WhenOriginNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
+        UpdateOriginRequest updated = UpdateOriginRequest.builder()
                 .updatedAt(OffsetDateTime.now())
                 .name("testing")
                 .slug("test")
                 .build();
-
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
@@ -205,9 +191,9 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorExists_FindAllLocators() {
+    void findAll_WhenOriginExists_FindAllOrigins() {
 
-        LocatorFilter filter = new LocatorFilter(
+        OriginFilter filter = new OriginFilter(
                 List.of("description"),
                 List.of("name"),
                 true,
@@ -216,21 +202,21 @@ class LocatorServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Locator locator = Locator.builder()
+        Origin origin = Origin.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        OriginResponse response = OriginResponse.builder()
                 .name("testing")
                 .build();
 
-        Page<Locator> page = new PageImpl<>(List.of(locator));
+        Page<Origin> page = new PageImpl<>(List.of(origin));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
-        when(mapper.toResponse(locator)).thenReturn(response);
+        when(mapper.toResponse(origin)).thenReturn(response);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<OriginResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -239,17 +225,17 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorNotExists_FindAllLocators() {
-        LocatorFilter filter = new LocatorFilter(
+    void findAll_WhenOriginNotExists_ReturnsEmptyPage() {
+        OriginFilter filter = new OriginFilter(
                 null, null, null, null
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Locator> page = new PageImpl<>(List.of());
+        Page<Origin> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<OriginResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

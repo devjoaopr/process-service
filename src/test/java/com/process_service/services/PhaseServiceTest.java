@@ -1,13 +1,9 @@
 package com.process_service.services;
 
-import com.process_service.dto.District.DistrictFilter;
-import com.process_service.dto.Locator.LocatorDTO;
-import com.process_service.dto.Locator.LocatorFilter;
-import com.process_service.dto.Locator.LocatorResponse;
-import com.process_service.dto.Locator.UpdateLocatorRequest;
-import com.process_service.entity.Locator;
-import com.process_service.mapper.LocatorMapper;
-import com.process_service.repository.LocatorRepository;
+import com.process_service.dto.Phase.*;
+import com.process_service.entity.Phase;
+import com.process_service.repository.PhaseRepository;
+import com.process_service.mapper.PhaseMapper;
 import com.process_service.shared.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,70 +25,70 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+
 @ExtendWith(MockitoExtension.class)
-class LocatorServiceTest {
+class PhaseServiceTest {
 
     @Mock
-    private LocatorRepository repository;
+    private PhaseRepository repository;
 
     @Mock
-    private LocatorMapper mapper;
+    private PhaseMapper mapper;
 
     @InjectMocks
-    private LocatorService service;
+    private PhaseService service;
 
     @Test
-    public void locatorService_createLocatorService_ReturnsLocatorDTO() {
+    public void phaseService_createPhaseService_ReturnsPhaseDTO() {
 
-        LocatorDTO dto = LocatorDTO.builder()
+        PhaseDTO dto = PhaseDTO.builder()
                 .id(UUID.randomUUID())
-                .name("testing-locator")
+                .name("testing-phase")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-
-        Locator entity = Locator.builder()
+        Phase entity = Phase.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PhaseResponse response = PhaseResponse.builder()
+                .name("testing")
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Locator.class))).thenReturn(entity);
+        when(repository.save(any(Phase.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
-        LocatorResponse result = service.create(dto);
+        PhaseResponse result = service.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
     }
 
     @Test
-    public void deleteById_WhenLocatorExists_DeleteLocator() {
+    public void deleteById_WhenPhaseExists_DeletePhase() {
         UUID id = UUID.randomUUID();
 
-        Locator process = Locator.builder()
+        Phase phase = Phase.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(process));
+        when(repository.findById(id)).thenReturn(Optional.of(phase));
 
-        repository.deleteById(id);
+        service.deleteById(id);
 
-        assertNotNull(process.getDeletedAt());
+        assertNotNull(phase.getDeletedAt());
 
-        verify(repository).save(process);
-
+        verify(repository).save(phase);
     }
 
     @Test
-    public void deleteById_WhenLocatorNotExists_DeleteLocator() {
+    public void deleteById_WhenPhaseNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -103,30 +99,29 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void findById_WhenLocatorExists_FindLocator() {
+    public void findById_WhenPhaseExists_FindPhase() {
         UUID id = UUID.randomUUID();
 
-        Locator situation = Locator.builder()
+        Phase phase = Phase.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PhaseResponse response = PhaseResponse.builder()
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(situation));
-        when(mapper.toResponse(situation)).thenReturn(response);
+        when(repository.findById(id)).thenReturn(Optional.of(phase));
+        when(mapper.toResponse(phase)).thenReturn(response);
 
-        LocatorResponse result = service.findById(id);
+        PhaseResponse result = service.findById(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
-
     }
 
     @Test
-    public void findById_WhenLocatorNotExists_FindLocator() {
+    public void findById_WhenPhaseNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -137,65 +132,58 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void updateById_WhenLocatorExists_Locator() {
+    public void updateById_WhenPhaseExists_UpdatePhase() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
-                .id(id)
-                .name("testing-name")
-                .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(1)
-                .updatedAt(OffsetDateTime.now())
-                .build();
-
-        Locator locator = Locator.builder()
+        UpdatePhaseRequest updated = UpdatePhaseRequest.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Locator saved = Locator.builder()
+        Phase phase = Phase.builder()
+                .id(id)
+                .name("testing-name")
+                .slug("testing-slug")
+                .updatedAt(OffsetDateTime.now())
+                .build();
+
+        Phase saved = Phase.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PhaseResponse response = PhaseResponse.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(2)
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(locator));
-        doNothing().when(mapper).UpdateEntityFromDto(updated, locator);
-        when(repository.save(locator)).thenReturn(saved);
+        when(repository.findById(id)).thenReturn(Optional.of(phase));
+        doNothing().when(mapper).UpdateEntityFromDto(updated, phase);
+        when(repository.save(phase)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        LocatorResponse result = service.updateById(id, updated);
+        PhaseResponse result = service.updateById(id, updated);
 
         assertNotNull(result);
-        assertEquals("testing", result.name());
-        assertNotNull(locator.getUpdatedAt());
-        verify(mapper).UpdateEntityFromDto(updated, locator);
-        verify(repository).save(locator);
+        assertEquals("testing-name", result.name());
+        assertNotNull(phase.getUpdatedAt());
+        verify(mapper).UpdateEntityFromDto(updated, phase);
+        verify(repository).save(phase);
     }
 
     @Test
-    public void updateById_WhenLocatorNotExists_UpdateLocator() {
+    public void updateById_WhenPhaseNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
+        UpdatePhaseRequest updated = UpdatePhaseRequest.builder()
                 .updatedAt(OffsetDateTime.now())
                 .name("testing")
                 .slug("test")
                 .build();
-
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
@@ -205,9 +193,9 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorExists_FindAllLocators() {
+    void findAll_WhenPhaseExists_FindAllPhases() {
 
-        LocatorFilter filter = new LocatorFilter(
+        PhaseFilter filter = new PhaseFilter(
                 List.of("description"),
                 List.of("name"),
                 true,
@@ -216,21 +204,21 @@ class LocatorServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Locator locator = Locator.builder()
+        Phase phase = Phase.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PhaseResponse response = PhaseResponse.builder()
                 .name("testing")
                 .build();
 
-        Page<Locator> page = new PageImpl<>(List.of(locator));
+        Page<Phase> page = new PageImpl<>(List.of(phase));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
-        when(mapper.toResponse(locator)).thenReturn(response);
+        when(mapper.toResponse(phase)).thenReturn(response);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<PhaseResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -239,17 +227,17 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorNotExists_FindAllLocators() {
-        LocatorFilter filter = new LocatorFilter(
+    void findAll_WhenPhaseNotExists_ReturnsEmptyPage() {
+        PhaseFilter filter = new PhaseFilter(
                 null, null, null, null
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Locator> page = new PageImpl<>(List.of());
+        Page<Phase> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<PhaseResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

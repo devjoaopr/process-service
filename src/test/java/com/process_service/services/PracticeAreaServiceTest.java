@@ -1,13 +1,9 @@
 package com.process_service.services;
 
-import com.process_service.dto.District.DistrictFilter;
-import com.process_service.dto.Locator.LocatorDTO;
-import com.process_service.dto.Locator.LocatorFilter;
-import com.process_service.dto.Locator.LocatorResponse;
-import com.process_service.dto.Locator.UpdateLocatorRequest;
-import com.process_service.entity.Locator;
-import com.process_service.mapper.LocatorMapper;
-import com.process_service.repository.LocatorRepository;
+import com.process_service.dto.PracticeArea.*;
+import com.process_service.entity.PracticeArea;
+import com.process_service.repository.PracticeAreaRepository;
+import com.process_service.mapper.PracticeAreaMapper;
 import com.process_service.shared.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,69 +26,68 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class LocatorServiceTest {
+class PracticeAreaServiceTest {
 
     @Mock
-    private LocatorRepository repository;
+    private PracticeAreaRepository repository;
 
     @Mock
-    private LocatorMapper mapper;
+    private PracticeAreaMapper mapper;
 
     @InjectMocks
-    private LocatorService service;
+    private PracticeAreaService service;
 
     @Test
-    public void locatorService_createLocatorService_ReturnsLocatorDTO() {
+    public void practiceAreaService_createPracticeAreaService_ReturnsPracticeAreaDTO() {
 
-        LocatorDTO dto = LocatorDTO.builder()
+        PracticeAreaDTO dto = PracticeAreaDTO.builder()
                 .id(UUID.randomUUID())
-                .name("testing-locator")
+                .name("testing-practice-area")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-
-        Locator entity = Locator.builder()
+        PracticeArea entity = PracticeArea.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PracticeAreaResponse response = PracticeAreaResponse.builder()
+                .name("testing")
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Locator.class))).thenReturn(entity);
+        when(repository.save(any(PracticeArea.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
-        LocatorResponse result = service.create(dto);
+        PracticeAreaResponse result = service.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
     }
 
     @Test
-    public void deleteById_WhenLocatorExists_DeleteLocator() {
+    public void deleteById_WhenPracticeAreaExists_DeletePracticeArea() {
         UUID id = UUID.randomUUID();
 
-        Locator process = Locator.builder()
+        PracticeArea practiceArea = PracticeArea.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(process));
+        when(repository.findById(id)).thenReturn(Optional.of(practiceArea));
 
-        repository.deleteById(id);
+        service.deleteById(id);
 
-        assertNotNull(process.getDeletedAt());
+        assertNotNull(practiceArea.getDeletedAt());
 
-        verify(repository).save(process);
-
+        verify(repository).save(practiceArea);
     }
 
     @Test
-    public void deleteById_WhenLocatorNotExists_DeleteLocator() {
+    public void deleteById_WhenPracticeAreaNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -103,30 +98,29 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void findById_WhenLocatorExists_FindLocator() {
+    public void findById_WhenPracticeAreaExists_FindPracticeArea() {
         UUID id = UUID.randomUUID();
 
-        Locator situation = Locator.builder()
+        PracticeArea practiceArea = PracticeArea.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PracticeAreaResponse response = PracticeAreaResponse.builder()
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(situation));
-        when(mapper.toResponse(situation)).thenReturn(response);
+        when(repository.findById(id)).thenReturn(Optional.of(practiceArea));
+        when(mapper.toResponse(practiceArea)).thenReturn(response);
 
-        LocatorResponse result = service.findById(id);
+        PracticeAreaResponse result = service.findById(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
-
     }
 
     @Test
-    public void findById_WhenLocatorNotExists_FindLocator() {
+    public void findById_WhenPracticeAreaNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -137,65 +131,58 @@ class LocatorServiceTest {
     }
 
     @Test
-    public void updateById_WhenLocatorExists_Locator() {
+    public void updateById_WhenPracticeAreaExists_UpdatePracticeArea() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
-                .id(id)
-                .name("testing-name")
-                .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(1)
-                .updatedAt(OffsetDateTime.now())
-                .build();
-
-        Locator locator = Locator.builder()
+        UpdatePracticeAreaRequest updated = UpdatePracticeAreaRequest.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Locator saved = Locator.builder()
+        PracticeArea practiceArea = PracticeArea.builder()
+                .id(id)
+                .name("testing-name")
+                .slug("testing-slug")
+                .updatedAt(OffsetDateTime.now())
+                .build();
+
+        PracticeArea saved = PracticeArea.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PracticeAreaResponse response = PracticeAreaResponse.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
-                .description("testing-description")
-                .active(true)
-                .displayOrder(2)
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(locator));
-        doNothing().when(mapper).UpdateEntityFromDto(updated, locator);
-        when(repository.save(locator)).thenReturn(saved);
+        when(repository.findById(id)).thenReturn(Optional.of(practiceArea));
+        doNothing().when(mapper).UpdateEntityFromDto(updated, practiceArea);
+        when(repository.save(practiceArea)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        LocatorResponse result = service.updateById(id, updated);
+        PracticeAreaResponse result = service.updateById(id, updated);
 
         assertNotNull(result);
-        assertEquals("testing", result.name());
-        assertNotNull(locator.getUpdatedAt());
-        verify(mapper).UpdateEntityFromDto(updated, locator);
-        verify(repository).save(locator);
+        assertEquals("testing-name", result.name());
+        assertNotNull(practiceArea.getUpdatedAt());
+        verify(mapper).UpdateEntityFromDto(updated, practiceArea);
+        verify(repository).save(practiceArea);
     }
 
     @Test
-    public void updateById_WhenLocatorNotExists_UpdateLocator() {
+    public void updateById_WhenPracticeAreaNotExists_ThrowsResourceNotFoundException() {
         UUID id = UUID.randomUUID();
 
-        UpdateLocatorRequest updated = UpdateLocatorRequest.builder()
+        UpdatePracticeAreaRequest updated = UpdatePracticeAreaRequest.builder()
                 .updatedAt(OffsetDateTime.now())
                 .name("testing")
                 .slug("test")
                 .build();
-
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
@@ -205,9 +192,9 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorExists_FindAllLocators() {
+    void findAll_WhenPracticeAreaExists_FindAllPracticeAreas() {
 
-        LocatorFilter filter = new LocatorFilter(
+        PracticeAreaFilter filter = new PracticeAreaFilter(
                 List.of("description"),
                 List.of("name"),
                 true,
@@ -216,21 +203,21 @@ class LocatorServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Locator locator = Locator.builder()
+        PracticeArea practiceArea = PracticeArea.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
 
-        LocatorResponse response = LocatorResponse.builder()
+        PracticeAreaResponse response = PracticeAreaResponse.builder()
                 .name("testing")
                 .build();
 
-        Page<Locator> page = new PageImpl<>(List.of(locator));
+        Page<PracticeArea> page = new PageImpl<>(List.of(practiceArea));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
-        when(mapper.toResponse(locator)).thenReturn(response);
+        when(mapper.toResponse(practiceArea)).thenReturn(response);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<PracticeAreaResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -239,17 +226,17 @@ class LocatorServiceTest {
     }
 
     @Test
-    void findAll_WhenLocatorNotExists_FindAllLocators() {
-        LocatorFilter filter = new LocatorFilter(
+    void findAll_WhenPracticeAreaNotExists_ReturnsEmptyPage() {
+        PracticeAreaFilter filter = new PracticeAreaFilter(
                 null, null, null, null
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Locator> page = new PageImpl<>(List.of());
+        Page<PracticeArea> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
-        Page<LocatorResponse> result = service.findAll(filter, pageable);
+        Page<PracticeAreaResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
