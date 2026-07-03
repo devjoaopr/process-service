@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="017-update-table-names.xml" author="devjoaopr">
+        <renameTable oldTableName="locator" newTableName="locators"/>
+        <renameTable oldTableName="process_type" newTableName="process_types"/>
+        <renameTable oldTableName="process" newTableName="processes"/>
+        <renameTable oldTableName="action_object" newTableName="action_objects"/>
+        <renameTable oldTableName="conference" newTableName="conferences"/>
+        <renameTable oldTableName="district" newTableName="districts"/>
+        <renameTable oldTableName="group" newTableName="groups"/>
+        <renameTable oldTableName="origin" newTableName="origins"/>
+        <renameTable oldTableName="phase" newTableName="phases"/>
+        <renameTable oldTableName="practice_area" newTableName="practice_areas"/>
+        <renameTable oldTableName="process_situation" newTableName="process_situations"/>
+        <renameTable oldTableName="subject_option" newTableName="subject_options"/>
+    </changeSet>
+
+</databaseChangeLog>

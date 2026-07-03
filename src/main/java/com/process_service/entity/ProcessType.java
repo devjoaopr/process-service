@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "process_type")
+@Table(name = "process_types")
 public class ProcessType {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
