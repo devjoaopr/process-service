@@ -14,6 +14,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table (name = "districts")
 public class District {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
