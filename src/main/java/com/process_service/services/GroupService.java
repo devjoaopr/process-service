@@ -29,13 +29,7 @@ public class GroupService {
     public GroupResponse createGroup(GroupDTO groupDTO) {
 
         Group group = mapper.toEntity(groupDTO);
-
-        group.setId(UUID.randomUUID());
-        group.setCreatedAt(OffsetDateTime.now());
-
-        Group saved = repository.save(group);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(group));
     }
 
     public void deleteById(UUID id) {

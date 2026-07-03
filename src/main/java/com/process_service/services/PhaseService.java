@@ -35,15 +35,8 @@ public class PhaseService {
 
 
     public PhaseResponse create(PhaseDTO phaseDTO) {
-
         Phase phase = mapper.toEntity(phaseDTO);
-
-        phase.setId(UUID.randomUUID());
-        phase.setCreatedAt(OffsetDateTime.now());
-
-        Phase saved = repository.save(phase);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(phase));
     }
 
     public void deleteById(UUID id) {

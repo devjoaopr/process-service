@@ -29,13 +29,7 @@ public class ConferenceService {
     public ConferenceResponse create(ConferenceDTO conferenceDTO) {
 
         Conference conference = mapper.toEntity(conferenceDTO);
-
-        conference.setId(UUID.randomUUID());
-        conference.setCreatedAt(OffsetDateTime.now());
-
-        Conference saved = repository.save(conference);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse( repository.save(conference));
     }
 
     public void deleteById(UUID id) {

@@ -27,15 +27,8 @@ public class LocatorService {
 
 
     public LocatorResponse create(LocatorDTO locatorDTO) {
-
         Locator locator = mapper.toEntity(locatorDTO);
-
-        locator.setId(UUID.randomUUID());
-        locator.setCreatedAt(OffsetDateTime.now());
-
-        Locator saved = repository.save(locator);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(locator));
     }
 
     public void deleteById(UUID id) {

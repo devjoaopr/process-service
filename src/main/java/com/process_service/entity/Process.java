@@ -1,8 +1,6 @@
 package com.process_service.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +20,7 @@ public class Process {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    private OffsetDateTime createdAt = OffsetDateTime.now();
     @Column(name = "updated_by_id")
     private UUID updatedById;
     @Column(name = "created_by_id")
@@ -80,6 +78,7 @@ public class Process {
     @Column(name = "internal_code")
     private Long internalCode;
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 }

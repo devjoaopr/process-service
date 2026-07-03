@@ -31,15 +31,8 @@ public class PrognosisService {
     private PrognosisMapper mapper;
 
     public PrognosisResponse create(PrognosisDTO dto) {
-
         Prognosis prognosis = mapper.toEntity(dto);
-
-        prognosis.setId(UUID.randomUUID());
-        prognosis.setCreatedAt(OffsetDateTime.now());
-
-        Prognosis saved = repository.save(prognosis);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(prognosis));
     }
 
     public void deleteById(UUID id) {

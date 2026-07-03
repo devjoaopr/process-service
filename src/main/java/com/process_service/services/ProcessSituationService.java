@@ -34,13 +34,7 @@ public class ProcessSituationService {
     public ProcessSituationResponse createProcessSituation(ProcessSituationDTO processSituationDTO) {
 
         ProcessSituation process = processMapper.toEntity(processSituationDTO);
-
-        process.setId(UUID.randomUUID());
-        process.setCreatedAt(OffsetDateTime.now());
-
-        ProcessSituation saved = repository.save(process);
-
-        return processMapper.toResponse(saved);
+        return processMapper.toResponse(repository.save(process));
     }
 
     public void deleteById(UUID id) {

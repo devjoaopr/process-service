@@ -30,13 +30,7 @@ public class OriginService {
     public OriginResponse create(OriginDTO originDTO) {
 
         Origin origin = mapper.toEntity(originDTO);
-
-        origin.setId(UUID.randomUUID());
-        origin.setCreatedAt(OffsetDateTime.now());
-
-        Origin saved = repository.save(origin);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(origin));
     }
 
     public void deleteById(UUID id) {

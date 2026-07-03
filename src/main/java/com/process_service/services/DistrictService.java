@@ -30,13 +30,7 @@ public class DistrictService {
     public DistrictResponse createDistrict(DistrictDTO districtDTO) {
 
         District district = mapper.toEntity(districtDTO);
-
-        district.setId(UUID.randomUUID());
-        district.setCreatedAt(OffsetDateTime.now());
-
-        District saved = repository.save(district);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(district));
     }
 
     public void deleteById(UUID id) {
