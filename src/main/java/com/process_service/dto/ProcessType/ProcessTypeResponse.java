@@ -1,8 +1,10 @@
 package com.process_service.dto.ProcessType;
 
+import lombok.Builder;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
-
+@Builder
 public record ProcessTypeResponse(
         UUID id,
         String name,
