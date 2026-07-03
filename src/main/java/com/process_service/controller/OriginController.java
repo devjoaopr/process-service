@@ -4,7 +4,6 @@ import com.process_service.dto.Origin.OriginDTO;
 import com.process_service.dto.Origin.OriginFilter;
 import com.process_service.dto.Origin.OriginResponse;
 import com.process_service.dto.Origin.UpdateOriginRequest;
-import com.process_service.entity.Origin;
 import com.process_service.services.OriginService;
 import com.process_service.shared.ApiResponseBuilder;
 import com.process_service.shared.PageResponse;
@@ -54,7 +53,7 @@ public class OriginController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<OriginResponse> delete(@PathVariable UUID id) {
         service.deleteById(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
@@ -69,7 +68,7 @@ public class OriginController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<OriginResponse> get(@PathVariable UUID id) {
         return ApiResponseBuilder.success(service.findById(id), "origin found correctly");
     }
@@ -83,7 +82,7 @@ public class OriginController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<OriginResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateOriginRequest dto) {
         return ApiResponseBuilder.success(
                 service.updateById(id, dto), "origin updated correctly"

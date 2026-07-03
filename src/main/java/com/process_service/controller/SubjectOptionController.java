@@ -55,7 +55,7 @@ public class SubjectOptionController {
     })
     @DeleteMapping("/delete/{id}")
     public StandardResponse<SubjectOptionResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -70,7 +70,7 @@ public class SubjectOptionController {
     })
     @GetMapping("/get/{id}")
     public StandardResponse<SubjectOptionResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "subject-option found correctly");
+        return ApiResponseBuilder.success(service.get(id), "subject-option found correctly");
     }
 
     @Operation(summary = "updates a subject-option area")
@@ -85,7 +85,7 @@ public class SubjectOptionController {
     @PatchMapping("/update/{id}")
     public StandardResponse<SubjectOptionResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateSubjectOptionRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "subject-options updated correctly"
+                service.update(id, dto), "subject-options updated correctly"
         );
     }
 

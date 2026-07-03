@@ -1,26 +1,22 @@
 package com.process_service.mapper;
 
-import com.process_service.dto.Prognosis.PrognosisDTO;
-import com.process_service.dto.Prognosis.PrognosisResponse;
-import com.process_service.dto.Prognosis.UpdatePrognosisRequest;
 import com.process_service.dto.SubjectOption.SubjectOptionDTO;
 import com.process_service.dto.SubjectOption.SubjectOptionResponse;
 import com.process_service.dto.SubjectOption.UpdateSubjectOptionRequest;
-import com.process_service.entity.Prognosis;
-import com.process_service.entity.SubjectOption;
+import com.process_service.entity.SubjectOptions;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface SubjectOptionMapper {
-    SubjectOption toDto(SubjectOptionDTO subjectOption);
+    SubjectOptions toDto(SubjectOptionDTO subjectOption);
 
-    SubjectOption toEntity(SubjectOptionDTO dto);
+    SubjectOptions toEntity(SubjectOptionDTO dto);
 
-    SubjectOptionResponse toResponse(SubjectOption subjectOption);
+    SubjectOptionResponse toResponse(SubjectOptions subjectOption);
 
-    UpdateSubjectOptionRequest toUpdateDistrictRequest(SubjectOption subjectOption);
+    UpdateSubjectOptionRequest toUpdateDistrictRequest(SubjectOptions subjectOption);
 
-    void UpdateEntityFromDto(UpdateSubjectOptionRequest dto, @MappingTarget SubjectOption entity);
+    void UpdateEntityFromDto(UpdateSubjectOptionRequest dto, @MappingTarget SubjectOptions entity);
 }

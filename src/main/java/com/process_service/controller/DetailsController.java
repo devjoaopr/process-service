@@ -54,9 +54,9 @@ public class DetailsController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<DetailResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "Deleted successfully.");
     }
 
@@ -69,9 +69,9 @@ public class DetailsController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
-    public StandardResponse<DetailResponse> getById(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "Detail found correctly.");
+    @GetMapping("/{id}")
+    public StandardResponse<DetailResponse> get(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(service.get(id), "Detail found correctly.");
     }
 
     @Operation(summary = "Updates a detail.")
@@ -83,10 +83,10 @@ public class DetailsController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<DetailResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateDetailRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "Detail updated correctly."
+                service.update(id, dto), "Detail updated correctly."
         );
     }
 

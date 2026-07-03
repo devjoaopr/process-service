@@ -53,9 +53,9 @@ public class PhaseController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<PhaseResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -68,9 +68,9 @@ public class PhaseController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<PhaseResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "phase found correctly");
+        return ApiResponseBuilder.success(service.get(id), "phase found correctly");
     }
 
     @Operation(summary = "updates a phase")
@@ -82,10 +82,10 @@ public class PhaseController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<PhaseResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdatePhaseRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "phase updated correctly"
+                service.update(id, dto), "phase updated correctly"
         );
     }
 

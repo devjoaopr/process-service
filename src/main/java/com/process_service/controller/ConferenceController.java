@@ -53,9 +53,9 @@ public class ConferenceController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<ConferenceResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "Deleted successfully.");
     }
 
@@ -68,9 +68,9 @@ public class ConferenceController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
-    public StandardResponse<ConferenceResponse> getById(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "Conference found correctly.");
+    @GetMapping("/{id}")
+    public StandardResponse<ConferenceResponse> get(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(service.get(id), "Conference found correctly.");
     }
 
     @Operation(summary = "Updates a conference.")
@@ -82,10 +82,10 @@ public class ConferenceController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<ConferenceResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateConferenceRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "Conference updated correctly."
+                service.update(id, dto), "Conference updated correctly."
         );
     }
 

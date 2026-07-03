@@ -1,26 +1,22 @@
 package com.process_service.mapper;
 
-import com.process_service.dto.ActionObject.ActionObjectDTO;
-import com.process_service.dto.ActionObject.ActionObjectResponse;
-import com.process_service.dto.ActionObject.UpdateActionObjectRequest;
 import com.process_service.dto.Group.GroupDTO;
 import com.process_service.dto.Group.GroupResponse;
 import com.process_service.dto.Group.UpdateGroupRequest;
-import com.process_service.entity.ActionObject;
-import com.process_service.entity.Group;
+import com.process_service.entity.Groups;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface GroupMapper {
-    GroupDTO toDto(Group group);
+    GroupDTO toDto(Groups group);
 
-    Group toEntity(GroupDTO dto);
+    Groups toEntity(GroupDTO dto);
 
-    GroupResponse toResponse(Group group);
+    GroupResponse toResponse(Groups group);
 
-    UpdateGroupRequest toUpdateDistrictRequest(Group group);
+    UpdateGroupRequest toUpdateDistrictRequest(Groups group);
 
-    void UpdateEntityFromDto(UpdateGroupRequest dto, @MappingTarget Group entity);
+    void UpdateEntityFromDto(UpdateGroupRequest dto, @MappingTarget Groups entity);
 }

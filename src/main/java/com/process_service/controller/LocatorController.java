@@ -54,9 +54,9 @@ public class LocatorController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<LocatorResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -69,9 +69,9 @@ public class LocatorController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<LocatorResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "locator found correctly");
+        return ApiResponseBuilder.success(service.get(id), "locator found correctly");
     }
 
     @Operation(summary = "updates a locator")
@@ -83,10 +83,10 @@ public class LocatorController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<LocatorResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateLocatorRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "locator updated correctly"
+                service.update(id, dto), "locator updated correctly"
         );
     }
 

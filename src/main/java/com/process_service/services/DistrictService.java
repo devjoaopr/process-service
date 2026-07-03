@@ -4,7 +4,8 @@ import com.process_service.dto.District.DistrictDTO;
 import com.process_service.dto.District.DistrictFilter;
 import com.process_service.dto.District.DistrictResponse;
 import com.process_service.dto.District.UpdateDistrictRequest;
-import com.process_service.entity.District;
+
+import com.process_service.entity.Districts;
 import com.process_service.mapper.DistrictMapper;
 import com.process_service.repository.DistrictRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -27,37 +28,37 @@ public class DistrictService {
     DistrictMapper mapper;
 
 
-    public DistrictResponse createDistrict(DistrictDTO districtDTO) {
+    public DistrictResponse create(DistrictDTO districtDTO) {
 
-        District district = mapper.toEntity(districtDTO);
+        Districts district = mapper.toEntity(districtDTO);
         return mapper.toResponse(repository.save(district));
     }
 
-    public void deleteById(UUID id) {
-        District district = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+    public void delete(UUID id) {
+        Districts district = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         district.setDeletedAt(OffsetDateTime.now());
         repository.delete(district);
 
     }
 
-    public DistrictResponse findById(UUID id) {
+    public DistrictResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public DistrictResponse updateById(UUID id, UpdateDistrictRequest request) {
-        District district = repository.findById(id)
+    public DistrictResponse update(UUID id, UpdateDistrictRequest request) {
+        Districts district = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, district);
         district.setUpdatedAt(OffsetDateTime.now());
-        District saved = repository.save(district);
+        Districts saved = repository.save(district);
 
         return mapper.toResponse(saved);
     }
 
     public Page<DistrictResponse> findAll(DistrictFilter filter, Pageable pageable) {
-        Specification<District> spec = Specification.unrestricted();
+        Specification<Districts> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("cnjId", filter.cnjId()))

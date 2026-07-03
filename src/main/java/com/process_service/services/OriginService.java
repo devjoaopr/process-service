@@ -4,7 +4,7 @@ import com.process_service.dto.Origin.OriginDTO;
 import com.process_service.dto.Origin.OriginFilter;
 import com.process_service.dto.Origin.OriginResponse;
 import com.process_service.dto.Origin.UpdateOriginRequest;
-import com.process_service.entity.Origin;
+import com.process_service.entity.Origins;
 import com.process_service.mapper.OriginMapper;
 import com.process_service.repository.OriginRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -29,12 +29,12 @@ public class OriginService {
 
     public OriginResponse create(OriginDTO originDTO) {
 
-        Origin origin = mapper.toEntity(originDTO);
+        Origins origin = mapper.toEntity(originDTO);
         return mapper.toResponse(repository.save(origin));
     }
 
     public void deleteById(UUID id) {
-        Origin origin = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+        Origins origin = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         origin.setDeletedAt(OffsetDateTime.now());
         repository.delete(origin);
 
@@ -45,19 +45,19 @@ public class OriginService {
     }
 
     public OriginResponse updateById(UUID id, UpdateOriginRequest request) {
-        Origin origin = repository.findById(id)
+        Origins origin = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, origin);
         origin.setUpdatedAt(OffsetDateTime.now());
-        Origin saved = repository.save(origin);
+        Origins saved = repository.save(origin);
 
         return mapper.toResponse(saved);
     }
 
     public Page<OriginResponse> findAll(OriginFilter filter, Pageable pageable) {
-        Specification<Origin> spec = Specification.unrestricted();
+        Specification<Origins> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("description", filter.description()))

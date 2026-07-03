@@ -8,14 +8,14 @@ import lombok.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
 @Entity
-@Table(name = "details")
-public class Detail {
+@Table(name = "origins")
+public class Origins {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
     @Column(name = "id", nullable = false)
@@ -32,7 +32,7 @@ public class Detail {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private OffsetDateTime createdAt;
 
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;

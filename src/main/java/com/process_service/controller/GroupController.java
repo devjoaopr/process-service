@@ -42,7 +42,7 @@ public class GroupController {
     })
     @PostMapping("/create")
     public StandardResponse<GroupResponse> create(@RequestBody @Valid GroupDTO dto) {
-        return ApiResponseBuilder.success(service.createGroup(dto), "group created successfully");
+        return ApiResponseBuilder.success(service.create(dto), "group created successfully");
     }
 
     @Operation(summary = "Deletes a group")
@@ -54,9 +54,9 @@ public class GroupController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<GroupResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -69,9 +69,9 @@ public class GroupController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<GroupResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "group found correctly");
+        return ApiResponseBuilder.success(service.get(id), "group found correctly");
     }
 
     @Operation(summary = "updates a group")
@@ -83,10 +83,10 @@ public class GroupController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<GroupResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateGroupRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "groups updated correctly"
+                service.update(id, dto), "groups updated correctly"
         );
     }
 

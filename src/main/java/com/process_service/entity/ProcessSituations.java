@@ -5,21 +5,18 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Builder
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table (name = "districts")
-public class District {
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
+@Entity
+@Table(name = "process_situations")
+public class ProcessSituations {
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
     @Column(name = "updated_at")
@@ -27,30 +24,23 @@ public class District {
     @NotNull
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now();
+    @Column(name = "display_order")
+    private Integer displayOrder;
     @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active;
-    @Size(max = 50)
-    @Column(name = "judicial_rank", length = 50)
-    private String judicialRank;
-    @Size(max = 50)
-    @Column(name = "cnj_id", length = 50)
-    private String cnjId;
-    @Size(max = 50)
-    @Column(name = "tj_id", length = 50)
-    private String tjId;
-    @Size(max = 50)
-    @Column(name = "internal_id", length = 50)
-    private String internalId;
+    @Column(name = "description", length = Integer.MAX_VALUE)
+    private String description;
     @Size(max = 150)
-    @Column(name = "slug", length = 150)
+    @NotNull
+    @Column(name = "slug", nullable = false, length = 150)
     private String slug;
-    @Size(max = 63)
-    @Column(name = "state", length = 63)
-    private String state;
     @Size(max = 150)
     @NotNull
     @Column(name = "name", nullable = false, length = 150)
     private String name;
-
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id
+    @Column(name = "id", nullable = false)
+    private UUID id;
 }

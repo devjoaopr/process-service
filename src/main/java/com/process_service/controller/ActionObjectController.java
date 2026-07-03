@@ -41,7 +41,7 @@ public class ActionObjectController {
     })
     @PostMapping("/create")
     public StandardResponse<ActionObjectResponse> create(@RequestBody @Valid ActionObjectDTO dto) {
-        return ApiResponseBuilder.success(service.createActionObject(dto), "action object created successfully");
+        return ApiResponseBuilder.success(service.create(dto), "action object created successfully");
     }
 
     @Operation(summary = "Deletes a action object")
@@ -53,9 +53,9 @@ public class ActionObjectController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<ActionObjectResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -68,9 +68,9 @@ public class ActionObjectController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
-    public StandardResponse<ActionObjectResponse> getById(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "Action object found correctly");
+    @GetMapping("/{id}")
+    public StandardResponse<ActionObjectResponse> get(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(service.get(id), "Action object found correctly");
     }
 
     @Operation(summary = "updates a action object")
@@ -82,10 +82,10 @@ public class ActionObjectController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<ActionObjectResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateActionObjectRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "Action object updated correctly"
+                service.update(id, dto), "Action object updated correctly"
         );
     }
 
@@ -98,7 +98,7 @@ public class ActionObjectController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/select")
+    @GetMapping
     public StandardResponse<PageResponse<ActionObjectResponse>> findAll(
             @ModelAttribute ActionObjectFilter filter,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable

@@ -1,21 +1,22 @@
 package com.process_service.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Getter
 @Setter
 @Entity
-@Table(name = "process_types")
-public class ProcessType {
-    @GeneratedValue(strategy = GenerationType.UUID)
+@Table(name = "action_objects")
+public class ActionObjects {
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
@@ -31,7 +32,7 @@ public class ProcessType {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt =  OffsetDateTime.now();
+    private OffsetDateTime createdAt;
 
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;

@@ -4,7 +4,7 @@ import com.process_service.dto.Conference.ConferenceDTO;
 import com.process_service.dto.Conference.ConferenceFilter;
 import com.process_service.dto.Conference.ConferenceResponse;
 import com.process_service.dto.Conference.UpdateConferenceRequest;
-import com.process_service.entity.Conference;
+import com.process_service.entity.Conferences;
 import com.process_service.mapper.ConferenceMapper;
 import com.process_service.repository.ConferenceRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -28,36 +28,36 @@ public class ConferenceService {
 
     public ConferenceResponse create(ConferenceDTO conferenceDTO) {
 
-        Conference conference = mapper.toEntity(conferenceDTO);
+        Conferences conference = mapper.toEntity(conferenceDTO);
         return mapper.toResponse( repository.save(conference));
     }
 
-    public void deleteById(UUID id) {
-        Conference conference = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+    public void delete(UUID id) {
+        Conferences conference = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         conference.setDeletedAt(OffsetDateTime.now());
         repository.save(conference);
 
     }
 
-    public ConferenceResponse findById(UUID id) {
+    public ConferenceResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public ConferenceResponse updateById(UUID id, UpdateConferenceRequest request) {
-        Conference conference = repository.findById(id)
+    public ConferenceResponse update(UUID id, UpdateConferenceRequest request) {
+        Conferences conference = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, conference);
         conference.setUpdatedAt(OffsetDateTime.now());
-        Conference saved = repository.save(conference);
+        Conferences saved = repository.save(conference);
 
         return mapper.toResponse(saved);
     }
 
 
     public Page<ConferenceResponse> findAll(ConferenceFilter filter, Pageable pageable) {
-        Specification<Conference> spec = Specification.unrestricted();
+        Specification<Conferences> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("description", filter.description()))

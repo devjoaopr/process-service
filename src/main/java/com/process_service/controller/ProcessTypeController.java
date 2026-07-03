@@ -57,7 +57,7 @@ public class ProcessTypeController {
     })
     @DeleteMapping("/delete/{id}")
     public StandardResponse<ProcessTypeResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "Deleted successfully.");
     }
 
@@ -71,8 +71,8 @@ public class ProcessTypeController {
             )
     })
     @GetMapping("/get/{id}")
-    public StandardResponse<ProcessTypeResponse> getById(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "Process type found correctly.");
+    public StandardResponse<ProcessTypeResponse> get(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(service.get(id), "Process type found correctly.");
     }
 
     @Operation(summary = "Updates a process type.")
@@ -87,7 +87,7 @@ public class ProcessTypeController {
     @PatchMapping("/update/{id}")
     public StandardResponse<ProcessTypeResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateProcessTypeRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "Process type updated correctly."
+                service.update(id, dto), "Process type updated correctly."
         );
     }
 

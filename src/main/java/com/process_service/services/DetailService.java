@@ -4,7 +4,7 @@ import com.process_service.dto.Detail.DetailDTO;
 import com.process_service.dto.Detail.DetailFilter;
 import com.process_service.dto.Detail.DetailResponse;
 import com.process_service.dto.Detail.UpdateDetailRequest;
-import com.process_service.entity.Detail;
+import com.process_service.entity.Details;
 import com.process_service.mapper.DetailMapper;
 import com.process_service.repository.DetailRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -27,36 +27,36 @@ public class DetailService {
 
     public DetailResponse create(DetailDTO dto) {
 
-        Detail detail = mapper.toEntity(dto);
+        Details detail = mapper.toEntity(dto);
         return mapper.toResponse(repository.save(detail));
     }
 
-    public void deleteById(UUID id) {
-        Detail detail = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+    public void delete(UUID id) {
+        Details detail = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         detail.setDeletedAt(OffsetDateTime.now());
         repository.save(detail);
 
     }
 
-    public DetailResponse findById(UUID id) {
+    public DetailResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public DetailResponse updateById(UUID id, UpdateDetailRequest request) {
-        Detail detail = repository.findById(id)
+    public DetailResponse update(UUID id, UpdateDetailRequest request) {
+        Details detail = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, detail);
         detail.setUpdatedAt(OffsetDateTime.now());
-        Detail saved = repository.save(detail);
+        Details saved = repository.save(detail);
 
         return mapper.toResponse(saved);
     }
 
 
     public Page<DetailResponse> findAll(DetailFilter filter, Pageable pageable) {
-        Specification<Detail> spec = Specification.unrestricted();
+        Specification<Details> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("description", filter.description()))

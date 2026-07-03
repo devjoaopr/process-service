@@ -4,7 +4,7 @@ import com.process_service.dto.PracticeArea.PracticeAreaDTO;
 import com.process_service.dto.PracticeArea.PracticeAreaFilter;
 import com.process_service.dto.PracticeArea.PracticeAreaResponse;
 import com.process_service.dto.PracticeArea.UpdatePracticeAreaRequest;
-import com.process_service.entity.PracticeArea;
+import com.process_service.entity.PracticeAreas;
 import com.process_service.mapper.PracticeAreaMapper;
 import com.process_service.repository.PracticeAreaRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -29,35 +29,35 @@ public class PracticeAreaService {
 
     public PracticeAreaResponse create(PracticeAreaDTO practiceAreaDTO) {
 
-        PracticeArea practiceArea = mapper.toEntity(practiceAreaDTO);
+        PracticeAreas practiceArea = mapper.toEntity(practiceAreaDTO);
         return mapper.toResponse(repository.save(practiceArea));
     }
 
-    public void deleteById(UUID id) {
-        PracticeArea practiceArea = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+    public void delete(UUID id) {
+        PracticeAreas practiceArea = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         practiceArea.setDeletedAt(OffsetDateTime.now());
         repository.save(practiceArea);
 
     }
 
-    public PracticeAreaResponse findById(UUID id) {
+    public PracticeAreaResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public PracticeAreaResponse updateById(UUID id, UpdatePracticeAreaRequest request) {
-        PracticeArea practiceArea = repository.findById(id)
+    public PracticeAreaResponse update(UUID id, UpdatePracticeAreaRequest request) {
+        PracticeAreas practiceArea = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, practiceArea);
         practiceArea.setUpdatedAt(OffsetDateTime.now());
-        PracticeArea saved = repository.save(practiceArea);
+        PracticeAreas saved = repository.save(practiceArea);
 
         return mapper.toResponse(saved);
     }
 
     public Page<PracticeAreaResponse> findAll(PracticeAreaFilter filter, Pageable pageable) {
-        Specification<PracticeArea> spec = Specification.unrestricted();
+        Specification<PracticeAreas> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("description", filter.description()))

@@ -4,7 +4,6 @@ import com.process_service.dto.ActionObject.ActionObjectDTO;
 import com.process_service.dto.ActionObject.ActionObjectFilter;
 import com.process_service.dto.ActionObject.ActionObjectResponse;
 import com.process_service.dto.ActionObject.UpdateActionObjectRequest;
-import com.process_service.entity.ActionObject;
 import com.process_service.mapper.ActionObjectMapper;
 import com.process_service.repository.ActionObjectRepository;
 import com.process_service.shared.ResourceNotFoundException;

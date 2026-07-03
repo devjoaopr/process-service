@@ -29,7 +29,7 @@ import java.util.UUID;
 public class DistrictController {
 
     @Autowired
-    private DistrictService districtService;
+    private DistrictService service;
 
     @Operation(summary = "Creates district", description = "create a new district")
     @ApiResponses(value = {
@@ -42,7 +42,7 @@ public class DistrictController {
     })
     @PostMapping("/create")
     public StandardResponse<DistrictResponse> create(@RequestBody @Valid DistrictDTO dto) {
-        return ApiResponseBuilder.success(districtService.createDistrict(dto), "district created successfully");
+        return ApiResponseBuilder.success(service.create(dto), "district created successfully");
     }
 
     @Operation(summary = "Deletes a district")
@@ -54,9 +54,9 @@ public class DistrictController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<DistrictResponse> delete(@PathVariable UUID id) {
-        districtService.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -69,9 +69,9 @@ public class DistrictController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<DistrictResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(districtService.findById(id), "district found correctly");
+        return ApiResponseBuilder.success(service.get(id), "district found correctly");
     }
 
     @Operation(summary = "updates a district")
@@ -83,10 +83,10 @@ public class DistrictController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<DistrictResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateDistrictRequest dto) {
         return ApiResponseBuilder.success(
-                districtService.updateById(id, dto), "district updated correctly"
+                service.update(id, dto), "district updated correctly"
         );
     }
 
@@ -105,6 +105,6 @@ public class DistrictController {
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ApiResponseBuilder.success(
-                PageResponse.of(districtService.findAll(filter, pageable)), "districts found correctly");
+                PageResponse.of(service.findAll(filter, pageable)), "districts found correctly");
     }
 }

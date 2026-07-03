@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -26,30 +24,26 @@ import java.util.UUID;
 public class ProcessController {
 
     @Autowired
-    ProcessService processService;
+    ProcessService service;
 
     @PostMapping("/create")
-    public ResponseEntity<ProcessResponse> createProcess(@RequestBody @Valid ProcessDTO dto) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(processService.createProcess(dto));
+    public StandardResponse<ProcessResponse> create(@RequestBody @Valid ProcessDTO dto) {
+        return ApiResponseBuilder.success(service.create(dto), "process created successfully");
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ProcessResponse> deleteProcess(@PathVariable UUID id) {
-        return ResponseEntity.noContent().build();
+    public StandardResponse<ProcessResponse> delete(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(null, "process deleted successfully");
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ProcessResponse> getProcess(@PathVariable UUID id) {
-        return ResponseEntity.ok(processService.findById(id));
+    public StandardResponse<ProcessResponse> get(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(service.get(id), "process get successfully");
     }
 
     @PatchMapping("/update/{id}")
-    public StandardResponse<ProcessResponse> updateProcess(@PathVariable UUID id, @RequestBody @Valid UpdateProcessRequest dto) {
-        return ApiResponseBuilder.success(
-                processService.updateById(id, dto), "process updated correctly"
-        );
+    public StandardResponse<ProcessResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateProcessRequest dto) {
+        return ApiResponseBuilder.success(service.update(id, dto), "process updated successfully");
     }
 
     @GetMapping("/select")
@@ -58,6 +52,6 @@ public class ProcessController {
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return ApiResponseBuilder.success(
-                PageResponse.of(processService.findAll(filter, pageable)), "process found correctly");
+                PageResponse.of(service.findAll(filter, pageable)), "process found correctly");
     }
 }

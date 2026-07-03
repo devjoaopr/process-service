@@ -41,7 +41,7 @@ public class PrognosisController {
     })
     @PostMapping("/create")
     public StandardResponse<PrognosisResponse> create(@RequestBody @Valid PrognosisDTO dto) {
-        return ApiResponseBuilder.success(service.create(dto), "Prognosis created succeswsfully.");
+        return ApiResponseBuilder.success(service.create(dto), "Prognosis created successfully.");
     }
 
     @Operation(summary = "Deletes a prognosis by its ID.")
@@ -55,7 +55,7 @@ public class PrognosisController {
     })
     @DeleteMapping("/delete/{id}")
     public StandardResponse<PrognosisResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "Deleted successfully.");
     }
 
@@ -69,8 +69,8 @@ public class PrognosisController {
             )
     })
     @GetMapping("/get/{id}")
-    public StandardResponse<PrognosisResponse> getById(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "Prognosis found correctly.");
+    public StandardResponse<PrognosisResponse> get(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(service.get(id), "Prognosis found correctly.");
     }
 
     @Operation(summary = "Updates a prognosis.")
@@ -85,7 +85,7 @@ public class PrognosisController {
     @PatchMapping("/update/{id}")
     public StandardResponse<PrognosisResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdatePrognosisRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "Prognosis updated correctly."
+                service.update(id, dto), "Prognosis updated correctly."
         );
     }
 
