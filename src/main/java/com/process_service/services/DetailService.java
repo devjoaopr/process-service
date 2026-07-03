@@ -28,13 +28,7 @@ public class DetailService {
     public DetailResponse create(DetailDTO dto) {
 
         Detail detail = mapper.toEntity(dto);
-
-        detail.setId(UUID.randomUUID());
-        detail.setCreatedAt(OffsetDateTime.now());
-
-        Detail saved = repository.save(detail);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(detail));
     }
 
     public void deleteById(UUID id) {

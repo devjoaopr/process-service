@@ -31,13 +31,7 @@ public class ProcessTypeService {
     public ProcessTypeResponse create(ProcessTypeDTO processTypeDTO) {
 
         ProcessType processType = mapper.toEntity(processTypeDTO);
-
-        processType.setId(UUID.randomUUID());
-        processType.setCreatedAt(OffsetDateTime.now());
-
-        ProcessType saved = repository.save(processType);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(processType));
     }
 
     public void deleteById(UUID id) {

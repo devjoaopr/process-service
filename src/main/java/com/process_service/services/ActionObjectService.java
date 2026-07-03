@@ -36,15 +36,8 @@ public class ActionObjectService {
 
 
     public ActionObjectResponse createActionObject(ActionObjectDTO actionObjectDTO) {
-
         ActionObject action = mapper.toEntity(actionObjectDTO);
-
-        action.setId(UUID.randomUUID());
-        action.setCreatedAt(OffsetDateTime.now());
-
-        ActionObject saved = repository.save(action);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(action));
     }
 
     public void deleteById(UUID id) {

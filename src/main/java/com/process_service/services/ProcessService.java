@@ -31,15 +31,8 @@ public class ProcessService {
     ProcessRepository repository;
 
     public ProcessResponse createProcess(ProcessDTO processDTO) {
-
         Process process = processMapper.toEntity(processDTO);
-
-        process.setId(UUID.randomUUID());
-        process.setCreatedAt(OffsetDateTime.now());
-
-        Process saved = repository.save(process);
-
-        return processMapper.toResponse(saved);
+        return processMapper.toResponse(repository.save(process));
     }
 
     public void deleteById(UUID id) {

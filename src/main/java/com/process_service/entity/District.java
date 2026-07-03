@@ -1,8 +1,6 @@
 package com.process_service.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -17,13 +15,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class District {
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id
+    @Column(name = "id", nullable = false)
+    private UUID id;
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    private OffsetDateTime createdAt = OffsetDateTime.now();
     @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active;
@@ -49,8 +51,5 @@ public class District {
     @NotNull
     @Column(name = "name", nullable = false, length = 150)
     private String name;
-    @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
 
 }

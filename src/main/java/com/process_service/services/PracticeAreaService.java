@@ -30,13 +30,7 @@ public class PracticeAreaService {
     public PracticeAreaResponse create(PracticeAreaDTO practiceAreaDTO) {
 
         PracticeArea practiceArea = mapper.toEntity(practiceAreaDTO);
-
-        practiceArea.setId(UUID.randomUUID());
-        practiceArea.setCreatedAt(OffsetDateTime.now());
-
-        PracticeArea saved = repository.save(practiceArea);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(practiceArea));
     }
 
     public void deleteById(UUID id) {

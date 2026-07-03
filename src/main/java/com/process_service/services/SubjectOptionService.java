@@ -29,13 +29,7 @@ public class SubjectOptionService {
     public SubjectOptionResponse create(SubjectOptionDTO subjectOptionDTO) {
 
         SubjectOption subjectOption = mapper.toEntity(subjectOptionDTO);
-
-        subjectOption.setId(UUID.randomUUID());
-        subjectOption.setCreatedAt(OffsetDateTime.now());
-
-        SubjectOption saved = repository.save(subjectOption);
-
-        return mapper.toResponse(saved);
+        return mapper.toResponse(repository.save(subjectOption));
     }
 
     public void deleteById(UUID id) {

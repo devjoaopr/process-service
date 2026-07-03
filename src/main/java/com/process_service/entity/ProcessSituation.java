@@ -1,8 +1,6 @@
 package com.process_service.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -24,7 +22,7 @@ public class ProcessSituation {
     private OffsetDateTime updatedAt;
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    private OffsetDateTime createdAt = OffsetDateTime.now();
     @Column(name = "display_order")
     private Integer displayOrder;
     @NotNull
@@ -40,6 +38,7 @@ public class ProcessSituation {
     @NotNull
     @Column(name = "name", nullable = false, length = 150)
     private String name;
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
