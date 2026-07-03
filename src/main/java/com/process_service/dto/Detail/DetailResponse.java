@@ -1,8 +1,11 @@
 package com.process_service.dto.Detail;
 
+import lombok.Builder;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+@Builder
 public record DetailResponse(
         UUID id,
         String name,
