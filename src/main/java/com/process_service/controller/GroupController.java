@@ -40,17 +40,17 @@ public class GroupController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<GroupResponse> create(@RequestBody @Valid GroupDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "group created successfully");
     }
 
     @Operation(summary = "Deletes a group")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "group deleted correctly",
+            @ApiResponse(responseCode = "204", description = "group deleted correctly",
                     content = @Content(schema = @Schema(implementation = GroupResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting group",
+            @ApiResponse(responseCode = "404", description = "error deleting group",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })

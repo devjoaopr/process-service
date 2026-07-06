@@ -39,21 +39,21 @@ public class SubjectOptionController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<SubjectOptionResponse> create(@RequestBody @Valid SubjectOptionDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "subject option created successfully");
     }
 
     @Operation(summary = "Deletes a subject option")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "subject option deleted correctly",
+            @ApiResponse(responseCode = "204", description = "subject option deleted correctly",
                     content = @Content(schema = @Schema(implementation = SubjectOptionResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting subject-option area",
+            @ApiResponse(responseCode = "404", description = "error deleting subject-option area",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<SubjectOptionResponse> delete(@PathVariable UUID id) {
         service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
@@ -68,7 +68,7 @@ public class SubjectOptionController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<SubjectOptionResponse> get(@PathVariable UUID id) {
         return ApiResponseBuilder.success(service.get(id), "subject-option found correctly");
     }
@@ -82,7 +82,7 @@ public class SubjectOptionController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<SubjectOptionResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateSubjectOptionRequest dto) {
         return ApiResponseBuilder.success(
                 service.update(id, dto), "subject-options updated correctly"

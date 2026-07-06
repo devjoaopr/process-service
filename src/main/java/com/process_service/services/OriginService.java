@@ -33,18 +33,18 @@ public class OriginService {
         return mapper.toResponse(repository.save(origin));
     }
 
-    public void deleteById(UUID id) {
+    public void delete(UUID id) {
         Origins origin = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         origin.setDeletedAt(OffsetDateTime.now());
-        repository.delete(origin);
+        repository.save(origin);
 
     }
 
-    public OriginResponse findById(UUID id) {
+    public OriginResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public OriginResponse updateById(UUID id, UpdateOriginRequest request) {
+    public OriginResponse update(UUID id, UpdateOriginRequest request) {
         Origins origin = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));

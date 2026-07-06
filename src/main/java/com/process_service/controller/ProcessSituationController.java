@@ -46,7 +46,7 @@ public class ProcessSituationController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<ProcessSituationResponse> create(@RequestBody @Valid ProcessSituationDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "Process situation created correctly.");
     }
@@ -59,7 +59,7 @@ public class ProcessSituationController {
             @ApiResponse(responseCode = "400", description = "error deleting process situation"
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<ProcessSituationResponse> delete(@PathVariable UUID id) {
         return ApiResponseBuilder.success(null, "Process situation deleted correctly.");
     }
@@ -67,12 +67,12 @@ public class ProcessSituationController {
     @Operation(summary = "return process situation", description = "this operation returns a process situation with his ID")
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "process returned correctly"
+            @ApiResponse(responseCode = "204", description = "process returned correctly"
             ),
-            @ApiResponse(responseCode = "400", description = "error creating process situation"
+            @ApiResponse(responseCode = "404", description = "error creating process situation"
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<ProcessSituationResponse> get(@PathVariable UUID id) {
         return ApiResponseBuilder.success(service.get(id),  "Process situation get correctly.");
     }
@@ -86,7 +86,7 @@ public class ProcessSituationController {
             @ApiResponse(responseCode = "400", description = "error updating process situation"
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<ProcessSituationResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateProcessSituationRequest dto) {
         return ApiResponseBuilder.success(
                 service.update(id, dto), "process situation updated"

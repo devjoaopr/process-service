@@ -39,7 +39,7 @@ public class ProcessService {
     public void delete(UUID id) {
         Processes process = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado"));
 
-        repository.delete(process);
+        repository.save(process);
 
     }
 

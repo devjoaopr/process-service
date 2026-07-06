@@ -35,7 +35,7 @@ public class ActionObjectService {
     public void delete(UUID id) {
         ActionObjects action = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         action.setDeletedAt(OffsetDateTime.now());
-        repository.delete(action);
+        repository.save(action);
 
     }
 

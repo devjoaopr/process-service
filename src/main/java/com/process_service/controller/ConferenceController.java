@@ -39,17 +39,17 @@ public class ConferenceController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<ConferenceResponse> create(@RequestBody @Valid ConferenceDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "Conference created successfully");
     }
 
     @Operation(summary = "Deletes a conference.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Conference deleted correctly.",
+            @ApiResponse(responseCode = "204", description = "Conference deleted correctly.",
                     content = @Content(schema = @Schema(implementation = ConferenceResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Error deleting conference.",
+            @ApiResponse(responseCode = "404", description = "Error deleting conference.",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })

@@ -39,17 +39,17 @@ public class ActionObjectController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<ActionObjectResponse> create(@RequestBody @Valid ActionObjectDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "action object created successfully");
     }
 
     @Operation(summary = "Deletes a action object")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "action object deleted correctly",
+            @ApiResponse(responseCode = "204", description = "action object deleted correctly",
                     content = @Content(schema = @Schema(implementation = ActionObjectResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting action object",
+            @ApiResponse(responseCode = "404", description = "error deleting action object",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
@@ -98,7 +98,7 @@ public class ActionObjectController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping
+    @GetMapping("/select")
     public StandardResponse<PageResponse<ActionObjectResponse>> findAll(
             @ModelAttribute ActionObjectFilter filter,
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable

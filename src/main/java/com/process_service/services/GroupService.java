@@ -35,7 +35,7 @@ public class GroupService {
     public void delete(UUID id) {
         Groups group = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         group.setDeletedAt(OffsetDateTime.now());
-        repository.delete(group);
+        repository.save(group);
 
     }
 

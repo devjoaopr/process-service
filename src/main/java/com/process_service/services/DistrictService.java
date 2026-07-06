@@ -37,7 +37,7 @@ public class DistrictService {
     public void delete(UUID id) {
         Districts district = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         district.setDeletedAt(OffsetDateTime.now());
-        repository.delete(district);
+        repository.save(district);
 
     }
 

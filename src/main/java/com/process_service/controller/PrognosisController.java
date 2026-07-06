@@ -39,21 +39,21 @@ public class PrognosisController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<PrognosisResponse> create(@RequestBody @Valid PrognosisDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "Prognosis created successfully.");
     }
 
     @Operation(summary = "Deletes a prognosis by its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Prognosis deleted correctly.",
+            @ApiResponse(responseCode = "204", description = "Prognosis deleted correctly.",
                     content = @Content(schema = @Schema(implementation = PrognosisResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Error deleting prognosis.",
+            @ApiResponse(responseCode = "404", description = "Error deleting prognosis.",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<PrognosisResponse> delete(@PathVariable UUID id) {
         service.delete(id);
         return ApiResponseBuilder.success(null, "Deleted successfully.");
@@ -68,7 +68,7 @@ public class PrognosisController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<PrognosisResponse> get(@PathVariable UUID id) {
         return ApiResponseBuilder.success(service.get(id), "Prognosis found correctly.");
     }
@@ -82,7 +82,7 @@ public class PrognosisController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<PrognosisResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdatePrognosisRequest dto) {
         return ApiResponseBuilder.success(
                 service.update(id, dto), "Prognosis updated correctly."

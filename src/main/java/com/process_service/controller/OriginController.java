@@ -39,23 +39,23 @@ public class OriginController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<OriginResponse> create(@RequestBody @Valid OriginDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "origin created successfully");
     }
 
     @Operation(summary = "Deletes a origin")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "origin deleted correctly",
+            @ApiResponse(responseCode = "204", description = "origin deleted correctly",
                     content = @Content(schema = @Schema(implementation = OriginResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting origin",
+            @ApiResponse(responseCode = "404", description = "error deleting origin",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
     @DeleteMapping("/{id}")
     public StandardResponse<OriginResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -64,13 +64,13 @@ public class OriginController {
             @ApiResponse(responseCode = "200", description = "origin retrieved successfully",
                     content = @Content(schema = @Schema(implementation = OriginResponse.class))
             ),
-            @ApiResponse(responseCode = "404", description = "error returning origin",
+            @ApiResponse(responseCode = "400", description = "error returning origin",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
     @GetMapping("/{id}")
     public StandardResponse<OriginResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "origin found correctly");
+        return ApiResponseBuilder.success(service.get(id), "origin found correctly");
     }
 
     @Operation(summary = "updates a origin")
@@ -85,7 +85,7 @@ public class OriginController {
     @PatchMapping("/{id}")
     public StandardResponse<OriginResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateOriginRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "origin updated correctly"
+                service.update(id, dto), "origin updated correctly"
         );
     }
 
