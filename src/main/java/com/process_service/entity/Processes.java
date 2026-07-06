@@ -14,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "process")
-public class Process {
+@Table(name = "processes")
+public class Processes {
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
     @Column(name = "updated_at")

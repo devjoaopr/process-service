@@ -30,7 +30,7 @@ public class PracticeAreaController {
     @Autowired
     private PracticeAreaService service;
 
-    @Operation(summary = "Creates practice area", description = "create a new practice area")
+    @Operation(summary = "Creates practice area.", description = "create a new practice area")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "practice area created correctly",
                     content = @Content(schema = @Schema(implementation = PracticeAreaResponse.class))
@@ -39,27 +39,27 @@ public class PracticeAreaController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<PracticeAreaResponse> create(@RequestBody @Valid PracticeAreaDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "practice area created successfully");
     }
 
-    @Operation(summary = "Deletes a practice area")
+    @Operation(summary = "Deletes a practice area.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "practice area deleted correctly",
+            @ApiResponse(responseCode = "204", description = "practice area deleted correctly",
                     content = @Content(schema = @Schema(implementation = PracticeAreaResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting practice area",
+            @ApiResponse(responseCode = "404", description = "error deleting practice area",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<PracticeAreaResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
-    @Operation(summary = "Returns a practice-area by its ID")
+    @Operation(summary = "Returns a practice-area by its ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "practice area retrieved successfully",
                     content = @Content(schema = @Schema(implementation = PracticeAreaResponse.class))
@@ -68,12 +68,12 @@ public class PracticeAreaController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<PracticeAreaResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "practice area found correctly");
+        return ApiResponseBuilder.success(service.get(id), "practice area found correctly");
     }
 
-    @Operation(summary = "updates a practice area")
+    @Operation(summary = "Updates a practice area.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "practice area updated correctly",
                     content = @Content(schema = @Schema(implementation = PracticeAreaResponse.class))
@@ -82,14 +82,14 @@ public class PracticeAreaController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<PracticeAreaResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdatePracticeAreaRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "practice area updated correctly"
+                service.update(id, dto), "practice area updated correctly"
         );
     }
 
-    @Operation(summary = "filter practice area", description = "this request can return and filter one or more practice area")
+    @Operation(summary = "Filter practice area.", description = "this request can return and filter one or more practice area")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "practice area found correctly",
                     content = @Content(schema = @Schema(implementation = PracticeAreaResponse.class))

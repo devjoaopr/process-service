@@ -1,4 +1,5 @@
 package com.process_service.controller;
+
 import com.process_service.dto.Phase.PhaseDTO;
 import com.process_service.dto.Phase.PhaseFilter;
 import com.process_service.dto.Phase.PhaseResponse;
@@ -39,23 +40,23 @@ public class PhaseController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<PhaseResponse> create(@RequestBody @Valid PhaseDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "phase created successfully");
     }
 
     @Operation(summary = "Deletes a phase")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "phase deleted correctly",
+            @ApiResponse(responseCode = "204", description = "phase deleted correctly",
                     content = @Content(schema = @Schema(implementation = PhaseResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting phase",
+            @ApiResponse(responseCode = "404", description = "error deleting phase",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<PhaseResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "deleted successfully");
     }
 
@@ -68,9 +69,9 @@ public class PhaseController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<PhaseResponse> get(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "phase found correctly");
+        return ApiResponseBuilder.success(service.get(id), "phase found correctly");
     }
 
     @Operation(summary = "updates a phase")
@@ -82,10 +83,10 @@ public class PhaseController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<PhaseResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdatePhaseRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "phase updated correctly"
+                service.update(id, dto), "phase updated correctly"
         );
     }
 

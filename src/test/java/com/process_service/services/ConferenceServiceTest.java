@@ -5,7 +5,6 @@ import com.process_service.dto.Conference.ConferenceDTO;
 import com.process_service.dto.Conference.ConferenceFilter;
 import com.process_service.dto.Conference.ConferenceResponse;
 import com.process_service.dto.Conference.UpdateConferenceRequest;
-import com.process_service.entity.Conference;
 import com.process_service.mapper.ConferenceMapper;
 import com.process_service.repository.ConferenceRepository;
 import com.process_service.shared.ResourceNotFoundException;

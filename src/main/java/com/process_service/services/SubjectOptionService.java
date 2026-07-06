@@ -4,7 +4,8 @@ import com.process_service.dto.SubjectOption.SubjectOptionDTO;
 import com.process_service.dto.SubjectOption.SubjectOptionFilter;
 import com.process_service.dto.SubjectOption.SubjectOptionResponse;
 import com.process_service.dto.SubjectOption.UpdateSubjectOptionRequest;
-import com.process_service.entity.SubjectOption;
+
+import com.process_service.entity.SubjectOptions;
 import com.process_service.mapper.SubjectOptionMapper;
 import com.process_service.repository.SubjectOptionRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -28,35 +29,35 @@ public class SubjectOptionService {
 
     public SubjectOptionResponse create(SubjectOptionDTO subjectOptionDTO) {
 
-        SubjectOption subjectOption = mapper.toEntity(subjectOptionDTO);
+        SubjectOptions subjectOption = mapper.toEntity(subjectOptionDTO);
         return mapper.toResponse(repository.save(subjectOption));
     }
 
-    public void deleteById(UUID id) {
-        SubjectOption subjectOption = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+    public void delete(UUID id) {
+        SubjectOptions subjectOption = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         subjectOption.setDeletedAt(OffsetDateTime.now());
         repository.save(subjectOption);
 
     }
 
-    public SubjectOptionResponse findById(UUID id) {
+    public SubjectOptionResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public SubjectOptionResponse updateById(UUID id, UpdateSubjectOptionRequest request) {
-        SubjectOption subjectOption = repository.findById(id)
+    public SubjectOptionResponse update(UUID id, UpdateSubjectOptionRequest request) {
+        SubjectOptions subjectOption = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, subjectOption);
         subjectOption.setUpdatedAt(OffsetDateTime.now());
-        SubjectOption saved = repository.save(subjectOption);
+        SubjectOptions saved = repository.save(subjectOption);
 
         return mapper.toResponse(saved);
     }
 
     public Page<SubjectOptionResponse> findAll(SubjectOptionFilter filter, Pageable pageable) {
-        Specification<SubjectOption> spec = Specification.unrestricted();
+        Specification<SubjectOptions> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("description", filter.description()))

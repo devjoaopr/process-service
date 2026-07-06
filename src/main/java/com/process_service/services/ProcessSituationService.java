@@ -1,13 +1,11 @@
 package com.process_service.services;
 
-import com.process_service.dto.Origin.OriginFilter;
-import com.process_service.dto.Origin.OriginResponse;
 import com.process_service.dto.ProcessSituation.ProcessSituationDTO;
 import com.process_service.dto.ProcessSituation.ProcessSituationFilter;
 import com.process_service.dto.ProcessSituation.ProcessSituationResponse;
 import com.process_service.dto.ProcessSituation.UpdateProcessSituationRequest;
-import com.process_service.entity.Origin;
-import com.process_service.entity.ProcessSituation;
+
+import com.process_service.entity.ProcessSituations;
 import com.process_service.shared.ResourceNotFoundException;
 import com.process_service.mapper.ProcessSituationMapper;
 import com.process_service.repository.ProcessSituationRepository;
@@ -19,7 +17,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,37 +28,37 @@ public class ProcessSituationService {
     @Autowired
     ProcessSituationMapper processMapper;
 
-    public ProcessSituationResponse createProcessSituation(ProcessSituationDTO processSituationDTO) {
+    public ProcessSituationResponse create(ProcessSituationDTO processSituationDTO) {
 
-        ProcessSituation process = processMapper.toEntity(processSituationDTO);
+        ProcessSituations process = processMapper.toEntity(processSituationDTO);
         return processMapper.toResponse(repository.save(process));
     }
 
-    public void deleteById(UUID id) {
-        ProcessSituation process = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado"));
+    public void delete(UUID id) {
+        ProcessSituations process = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado"));
         process.setDeletedAt(OffsetDateTime.now());
         repository.save(process);
 
     }
 
-    public ProcessSituationResponse findById(UUID id) {
+    public ProcessSituationResponse get(UUID id) {
         return processMapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado")));
     }
 
-    public ProcessSituationResponse updateById(UUID id, UpdateProcessSituationRequest request) {
-        ProcessSituation process = repository.findById(id)
+    public ProcessSituationResponse update(UUID id, UpdateProcessSituationRequest request) {
+        ProcessSituations process = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         processMapper.updateEntityFromDto(request, process);
         process.setUpdatedAt(OffsetDateTime.now());
-        ProcessSituation saved = repository.save(process);
+        ProcessSituations saved = repository.save(process);
 
         return processMapper.toResponse(saved);
     }
 
     public Page<ProcessSituationResponse> findAll(ProcessSituationFilter filter, Pageable pageable) {
-        Specification<ProcessSituation> spec = Specification.unrestricted();
+        Specification<ProcessSituations> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("description", filter.description()))

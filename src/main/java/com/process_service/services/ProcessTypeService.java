@@ -6,7 +6,7 @@ import com.process_service.dto.ProcessType.ProcessTypeFilter;
 import com.process_service.dto.ProcessType.ProcessTypeResponse;
 import com.process_service.dto.ProcessType.UpdateProcessTypeRequest;
 
-import com.process_service.entity.ProcessType;
+import com.process_service.entity.ProcessTypes;
 import com.process_service.mapper.ProcessTypeMapper;
 import com.process_service.repository.ProcessTypeRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -30,35 +30,35 @@ public class ProcessTypeService {
 
     public ProcessTypeResponse create(ProcessTypeDTO processTypeDTO) {
 
-        ProcessType processType = mapper.toEntity(processTypeDTO);
+        ProcessTypes processType = mapper.toEntity(processTypeDTO);
         return mapper.toResponse(repository.save(processType));
     }
 
-    public void deleteById(UUID id) {
-        ProcessType processType = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+    public void delete(UUID id) {
+        ProcessTypes processType = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         processType.setDeletedAt(OffsetDateTime.now());
         repository.save(processType);
 
     }
 
-    public ProcessTypeResponse findById(UUID id) {
+    public ProcessTypeResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public ProcessTypeResponse updateById(UUID id, UpdateProcessTypeRequest request) {
-        ProcessType processType = repository.findById(id)
+    public ProcessTypeResponse update(UUID id, UpdateProcessTypeRequest request) {
+        ProcessTypes processType = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, processType);
         processType.setUpdatedAt(OffsetDateTime.now());
-        ProcessType saved = repository.save(processType);
+        ProcessTypes saved = repository.save(processType);
 
         return mapper.toResponse(saved);
     }
 
     public Page<ProcessTypeResponse> findAll(ProcessTypeFilter filter, Pageable pageable) {
-        Specification<ProcessType> spec = Specification.unrestricted();
+        Specification<ProcessTypes> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("name", filter.name()))

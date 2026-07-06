@@ -1,14 +1,9 @@
 package com.process_service.services;
 
-import com.process_service.dto.Detail.DetailDTO;
-import com.process_service.dto.Detail.DetailFilter;
-import com.process_service.dto.Detail.DetailResponse;
-import com.process_service.dto.Detail.UpdateDetailRequest;
 import com.process_service.dto.Prognosis.PrognosisDTO;
 import com.process_service.dto.Prognosis.PrognosisFilter;
 import com.process_service.dto.Prognosis.PrognosisResponse;
 import com.process_service.dto.Prognosis.UpdatePrognosisRequest;
-import com.process_service.entity.Detail;
 import com.process_service.entity.Prognosis;
 import com.process_service.mapper.PrognosisMapper;
 import com.process_service.repository.PrognosisRepository;
@@ -35,17 +30,17 @@ public class PrognosisService {
         return mapper.toResponse(repository.save(prognosis));
     }
 
-    public void deleteById(UUID id) {
+    public void delete(UUID id) {
         Prognosis prognosis = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         prognosis.setDeletedAt(OffsetDateTime.now());
         repository.save(prognosis);
     }
 
-    public PrognosisResponse findById(UUID id) {
+    public PrognosisResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public PrognosisResponse updateById(UUID id, UpdatePrognosisRequest request) {
+    public PrognosisResponse update(UUID id, UpdatePrognosisRequest request) {
         Prognosis prognosis = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));

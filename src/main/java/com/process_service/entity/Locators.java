@@ -9,13 +9,13 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "practice_area")
-public class PracticeArea {
+@Table(name = "locators")
+public class Locators {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
     @Column(name = "id", nullable = false)
@@ -32,7 +32,7 @@ public class PracticeArea {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private OffsetDateTime createdAt =  OffsetDateTime.now();
 
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;

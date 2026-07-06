@@ -6,59 +6,39 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="004-comarca-table" author="devjoaopr">
+    <changeSet id="002-process-situation-table" author="devjoaopr">
 
-        <createTable tableName="comarca">
+        <createTable tableName="process_situation">
 
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-
             <column name="name" type="varchar(150)">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="state" type="varchar(63)">
-                <constraints nullable="true"/>
-            </column>
-
             <column name="slug" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
                 <constraints nullable="true"/>
             </column>
-            
-            <column name="internal_id" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="tj_id" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="cnj_id" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-
-            <column name="judicial_rank" type="varchar(50)">
-                <constraints nullable="true"/>
-            </column>
-
             <column name="active" type="boolean">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="created_at" type="timestamptz">
+            <column name="display_order" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="updated_at" type="timestamptz">
+            <column name="updated_at" type="timestamp">
                 <constraints nullable="true"/>
             </column>
-
-            <column name="deleted_at" type="timestamptz">
+            <column name="deleted_at" type="timestamp">
                 <constraints nullable="true"/>
             </column>
-
         </createTable>
 
     </changeSet>
+
 </databaseChangeLog>

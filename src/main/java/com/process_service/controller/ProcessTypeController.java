@@ -41,23 +41,23 @@ public class ProcessTypeController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<ProcessTypeResponse> create(@RequestBody @Valid ProcessTypeDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "Process type created successfully.");
     }
 
     @Operation(summary = "Deletes a process type by its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Process type deleted correctly.",
+            @ApiResponse(responseCode = "204", description = "Process type deleted correctly.",
                     content = @Content(schema = @Schema(implementation = ProcessTypeResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Error deleting process type.",
+            @ApiResponse(responseCode = "404", description = "Error deleting process type.",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<ProcessTypeResponse> delete(@PathVariable UUID id) {
-        service.deleteById(id);
+        service.delete(id);
         return ApiResponseBuilder.success(null, "Deleted successfully.");
     }
 
@@ -70,9 +70,9 @@ public class ProcessTypeController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @GetMapping("/get/{id}")
-    public StandardResponse<ProcessTypeResponse> getById(@PathVariable UUID id) {
-        return ApiResponseBuilder.success(service.findById(id), "Process type found correctly.");
+    @GetMapping("/{id}")
+    public StandardResponse<ProcessTypeResponse> get(@PathVariable UUID id) {
+        return ApiResponseBuilder.success(service.get(id), "Process type found correctly.");
     }
 
     @Operation(summary = "Updates a process type.")
@@ -84,10 +84,10 @@ public class ProcessTypeController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<ProcessTypeResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateProcessTypeRequest dto) {
         return ApiResponseBuilder.success(
-                service.updateById(id, dto), "Process type updated correctly."
+                service.update(id, dto), "Process type updated correctly."
         );
     }
 

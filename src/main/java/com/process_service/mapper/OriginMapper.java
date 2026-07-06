@@ -1,26 +1,22 @@
 package com.process_service.mapper;
 
-import com.process_service.dto.Locator.LocatorDTO;
-import com.process_service.dto.Locator.LocatorResponse;
-import com.process_service.dto.Locator.UpdateLocatorRequest;
 import com.process_service.dto.Origin.OriginDTO;
 import com.process_service.dto.Origin.OriginResponse;
 import com.process_service.dto.Origin.UpdateOriginRequest;
-import com.process_service.entity.Locator;
-import com.process_service.entity.Origin;
+import com.process_service.entity.Origins;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface OriginMapper {
-    OriginDTO toDto(Origin origin);
+    OriginDTO toDto(Origins origin);
 
-    Origin toEntity(OriginDTO dto);
+    Origins toEntity(OriginDTO dto);
 
-    OriginResponse toResponse(Origin origin);
+    OriginResponse toResponse(Origins origin);
 
-    UpdateOriginRequest toUpdateDistrictRequest(Origin origin);
+    UpdateOriginRequest toUpdateDistrictRequest(Origins origin);
 
-    void UpdateEntityFromDto(UpdateOriginRequest dto, @MappingTarget Origin entity);
+    void UpdateEntityFromDto(UpdateOriginRequest dto, @MappingTarget Origins entity);
 }

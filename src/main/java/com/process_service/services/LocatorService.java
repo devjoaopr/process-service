@@ -4,7 +4,7 @@ import com.process_service.dto.Locator.LocatorDTO;
 import com.process_service.dto.Locator.LocatorFilter;
 import com.process_service.dto.Locator.LocatorResponse;
 import com.process_service.dto.Locator.UpdateLocatorRequest;
-import com.process_service.entity.Locator;
+import com.process_service.entity.Locators;
 import com.process_service.mapper.LocatorMapper;
 import com.process_service.repository.LocatorRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -27,36 +27,36 @@ public class LocatorService {
 
 
     public LocatorResponse create(LocatorDTO locatorDTO) {
-        Locator locator = mapper.toEntity(locatorDTO);
+        Locators locator = mapper.toEntity(locatorDTO);
         return mapper.toResponse(repository.save(locator));
     }
 
-    public void deleteById(UUID id) {
-        Locator locator = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
+    public void delete(UUID id) {
+        Locators locator = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         locator.setDeletedAt(OffsetDateTime.now());
-        repository.delete(locator);
+        repository.save(locator);
 
     }
 
-    public LocatorResponse findById(UUID id) {
+    public LocatorResponse get(UUID id) {
         return mapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado")));
     }
 
-    public LocatorResponse updateById(UUID id, UpdateLocatorRequest request) {
-        Locator locator = repository.findById(id)
+    public LocatorResponse update(UUID id, UpdateLocatorRequest request) {
+        Locators locator = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         mapper.UpdateEntityFromDto(request, locator);
         locator.setUpdatedAt(OffsetDateTime.now());
-        Locator saved = repository.save(locator);
+        Locators saved = repository.save(locator);
 
         return mapper.toResponse(saved);
     }
 
 
     public Page<LocatorResponse> findAll(LocatorFilter filter, Pageable pageable) {
-        Specification<Locator> spec = Specification.unrestricted();
+        Specification<Locators> spec = Specification.unrestricted();
 
         spec = spec
                 .and(SpecificationUtils.in("description", filter.description()))

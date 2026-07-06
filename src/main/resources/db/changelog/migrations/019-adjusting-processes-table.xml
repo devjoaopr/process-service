@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="019-adjusting-processes-table" author="devjoaopr">
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="locator_option_id"
+                constraintName="fk_processes_locator_option"
+                referencedTableName="locators"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="phase_option_id"
+                constraintName="fk_processes_phase_option"
+                referencedTableName="phases"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="origin_option_id"
+                constraintName="fk_processes_origin_option"
+                referencedTableName="origins"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="conference_option_id"
+                constraintName="fk_processes_conference_option"
+                referencedTableName="conferences"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="prognosis_option_id"
+                constraintName="fk_processes_prognosis_option"
+                referencedTableName="prognosis"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="detail_option_id"
+                constraintName="fk_processes_detail_option"
+                referencedTableName="details"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="subject_option_id"
+                constraintName="fk_processes_subject_option"
+                referencedTableName="subject_options"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="action_object_option_id"
+                constraintName="fk_processes_action_object_option"
+                referencedTableName="action_objects"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="practice_area_option_id"
+                constraintName="fk_processes_practice_area_option"
+                referencedTableName="practice_areas"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="group_option_id"
+                constraintName="fk_processes_group_option"
+                referencedTableName="groups"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="process_type_option_id"
+                constraintName="fk_processes_process_type_option"
+                referencedTableName="process_types"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+
+        <addForeignKeyConstraint
+                baseTableName="processes"
+                baseColumnNames="situation_option_id"
+                constraintName="fk_processes_situation_option"
+                referencedTableName="situation_options"
+                referencedColumnNames="id"
+                onDelete="SET NULL"/>
+    </changeSet>
+</databaseChangeLog>

@@ -5,7 +5,8 @@ import com.process_service.dto.Process.ProcessResponse;
 import com.process_service.dto.Process.ProcessDTO;
 import com.process_service.dto.Process.UpdateProcessRequest;
 
-import com.process_service.entity.Process;
+
+import com.process_service.entity.Processes;
 import com.process_service.shared.ResourceNotFoundException;
 import com.process_service.mapper.ProcessMapper;
 import com.process_service.repository.ProcessRepository;
@@ -30,57 +31,57 @@ public class ProcessService {
     @Autowired
     ProcessRepository repository;
 
-    public ProcessResponse createProcess(ProcessDTO processDTO) {
-        Process process = processMapper.toEntity(processDTO);
+    public ProcessResponse create(ProcessDTO processDTO) {
+        Processes process = processMapper.toEntity(processDTO);
         return processMapper.toResponse(repository.save(process));
     }
 
-    public void deleteById(UUID id) {
-        Process process = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado"));
+    public void delete(UUID id) {
+        Processes process = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado"));
 
-        repository.delete(process);
+        repository.save(process);
 
     }
 
-    public ProcessResponse findById(UUID id) {
+    public ProcessResponse get(UUID id) {
         return processMapper.toResponse(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Processo nao encontrado")));
     }
 
-    public ProcessResponse updateById(UUID id, UpdateProcessRequest request) {
-        Process process = repository.findById(id)
+    public ProcessResponse update(UUID id, UpdateProcessRequest request) {
+        Processes process = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No process found with id " + id));
 
         processMapper.updateEntityFromDto(request, process);
         process.setUpdatedAt(OffsetDateTime.now());
-        Process saved = repository.save(process);
+        Processes saved = repository.save(process);
 
         return processMapper.toResponse(saved);
     }
 
-    private Specification<Process> likeFilter(String field, String value) {
+    private Specification<Processes> likeFilter(String field, String value) {
         if (value == null || value.isBlank()) return Specification.unrestricted();
         return (root, query, cb) -> cb.like(cb.lower(root.get(field)), "%" + value.toLowerCase() + "%");
     }
 
-    private Specification<Process> equalFilter(String field, Object value) {
+    private Specification<Processes> equalFilter(String field, Object value) {
         if (value == null) return Specification.unrestricted();
         return (root, query, cb) -> cb.equal(root.get(field), value);
     }
 
-    private Specification<Process> dateFilter(String field, OffsetDateTime value) {
+    private Specification<Processes> dateFilter(String field, OffsetDateTime value) {
         if (value == null) return Specification.unrestricted();
         return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get(field), value);
     }
 
-    private <T> Specification<Process> inFilter(String field, List<T> values) {
+    private <T> Specification<Processes> inFilter(String field, List<T> values) {
         if (values == null || values.isEmpty()) return Specification.unrestricted();
         return (root, query, cb) -> root.get(field).in(values);
     }
 
     //quickdraw !
     public Page<ProcessResponse> findAll(ProcessFilter filter, Pageable pageable) {
-        Specification<Process> spec = Specification.unrestricted();
+        Specification<Processes> spec = Specification.unrestricted();
 
         spec = spec
                 .and(likeFilter("cnjNumber", filter.cnjNumber()))
