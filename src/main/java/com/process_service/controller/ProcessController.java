@@ -26,22 +26,22 @@ public class ProcessController {
     @Autowired
     ProcessService service;
 
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<ProcessResponse> create(@RequestBody @Valid ProcessDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "process created successfully");
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<ProcessResponse> delete(@PathVariable UUID id) {
         return ApiResponseBuilder.success(null, "process deleted successfully");
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public StandardResponse<ProcessResponse> get(@PathVariable UUID id) {
         return ApiResponseBuilder.success(service.get(id), "process get successfully");
     }
 
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<ProcessResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdateProcessRequest dto) {
         return ApiResponseBuilder.success(service.update(id, dto), "process updated successfully");
     }

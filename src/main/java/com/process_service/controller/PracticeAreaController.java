@@ -39,17 +39,17 @@ public class PracticeAreaController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<PracticeAreaResponse> create(@RequestBody @Valid PracticeAreaDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "practice area created successfully");
     }
 
     @Operation(summary = "Deletes a practice area.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "practice area deleted correctly",
+            @ApiResponse(responseCode = "204", description = "practice area deleted correctly",
                     content = @Content(schema = @Schema(implementation = PracticeAreaResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting practice area",
+            @ApiResponse(responseCode = "404", description = "error deleting practice area",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })

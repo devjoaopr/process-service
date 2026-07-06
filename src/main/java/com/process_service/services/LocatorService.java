@@ -34,7 +34,7 @@ public class LocatorService {
     public void delete(UUID id) {
         Locators locator = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comarca nao encontrado"));
         locator.setDeletedAt(OffsetDateTime.now());
-        repository.delete(locator);
+        repository.save(locator);
 
     }
 

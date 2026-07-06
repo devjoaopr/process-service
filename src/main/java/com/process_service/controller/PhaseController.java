@@ -1,4 +1,5 @@
 package com.process_service.controller;
+
 import com.process_service.dto.Phase.PhaseDTO;
 import com.process_service.dto.Phase.PhaseFilter;
 import com.process_service.dto.Phase.PhaseResponse;
@@ -39,17 +40,17 @@ public class PhaseController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<PhaseResponse> create(@RequestBody @Valid PhaseDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "phase created successfully");
     }
 
     @Operation(summary = "Deletes a phase")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "phase deleted correctly",
+            @ApiResponse(responseCode = "204", description = "phase deleted correctly",
                     content = @Content(schema = @Schema(implementation = PhaseResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting phase",
+            @ApiResponse(responseCode = "404", description = "error deleting phase",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })

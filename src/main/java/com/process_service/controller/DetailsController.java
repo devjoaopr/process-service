@@ -40,7 +40,7 @@ public class DetailsController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<DetailResponse> create(@RequestBody @Valid DetailDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "Detail created successfully.");
     }
@@ -62,7 +62,7 @@ public class DetailsController {
 
     @Operation(summary = "Returns a detail by its ID.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Detail retrieved successfully.",
+            @ApiResponse(responseCode = "204", description = "Detail retrieved successfully.",
                     content = @Content(schema = @Schema(implementation = DetailResponse.class))
             ),
             @ApiResponse(responseCode = "404", description = "Error returning Detail.",

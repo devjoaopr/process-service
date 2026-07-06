@@ -40,17 +40,17 @@ public class DistrictController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PostMapping("/create")
+    @PostMapping
     public StandardResponse<DistrictResponse> create(@RequestBody @Valid DistrictDTO dto) {
         return ApiResponseBuilder.success(service.create(dto), "district created successfully");
     }
 
     @Operation(summary = "Deletes a district")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "district deleted correctly",
+            @ApiResponse(responseCode = "204", description = "district deleted correctly",
                     content = @Content(schema = @Schema(implementation = DistrictResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "error deleting district",
+            @ApiResponse(responseCode = "404", description = "error deleting district",
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })

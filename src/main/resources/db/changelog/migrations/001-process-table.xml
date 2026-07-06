@@ -22,13 +22,9 @@
 
             <column name="old_process_number" type="varchar(80)"/>
 
-            <column name="situation_option_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
+            <column name="situation_option_id" type="uuid"/>
 
-            <column name="process_type_option_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
+            <column name="process_type_option_id" type="uuid"/>
 
             <column name="group_option_id" type="uuid"/>
 
