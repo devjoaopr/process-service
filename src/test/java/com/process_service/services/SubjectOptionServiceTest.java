@@ -1,7 +1,7 @@
 package com.process_service.services;
 
 import com.process_service.dto.SubjectOption.*;
-import com.process_service.entity.SubjectOption;
+import com.process_service.entity.SubjectOptions;
 import com.process_service.mapper.SubjectOptionMapper;
 import com.process_service.repository.SubjectOptionRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -46,7 +46,7 @@ class SubjectOptionServiceTest {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        SubjectOption entity = SubjectOption.builder()
+        SubjectOptions entity = SubjectOptions.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -58,7 +58,7 @@ class SubjectOptionServiceTest {
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(SubjectOption.class))).thenReturn(entity);
+        when(repository.save(any(SubjectOptions.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
         SubjectOptionResponse result = service.create(dto);
@@ -71,14 +71,14 @@ class SubjectOptionServiceTest {
     public void deleteById_WhenSubjectOptionExists_DeleteSubjectOption() {
         UUID id = UUID.randomUUID();
 
-        SubjectOption subjectOption = SubjectOption.builder()
+        SubjectOptions subjectOption = SubjectOptions.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(repository.findById(id)).thenReturn(Optional.of(subjectOption));
 
-        service.deleteById(id);
+        service.delete(id);
 
         assertNotNull(subjectOption.getDeletedAt());
 
@@ -91,7 +91,7 @@ class SubjectOptionServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -100,7 +100,7 @@ class SubjectOptionServiceTest {
     public void findById_WhenSubjectOptionExists_FindSubjectOption() {
         UUID id = UUID.randomUUID();
 
-        SubjectOption subjectOption = SubjectOption.builder()
+        SubjectOptions subjectOption = SubjectOptions.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -112,7 +112,7 @@ class SubjectOptionServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(subjectOption));
         when(mapper.toResponse(subjectOption)).thenReturn(response);
 
-        SubjectOptionResponse result = service.findById(id);
+        SubjectOptionResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -124,7 +124,7 @@ class SubjectOptionServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -140,14 +140,14 @@ class SubjectOptionServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        SubjectOption subjectOption = SubjectOption.builder()
+        SubjectOptions subjectOption = SubjectOptions.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        SubjectOption saved = SubjectOption.builder()
+        SubjectOptions saved = SubjectOptions.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -164,7 +164,7 @@ class SubjectOptionServiceTest {
         when(repository.save(subjectOption)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        SubjectOptionResponse result = service.updateById(id, updated);
+        SubjectOptionResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing-name", result.name());
@@ -185,7 +185,7 @@ class SubjectOptionServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -202,7 +202,7 @@ class SubjectOptionServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        SubjectOption subjectOption = SubjectOption.builder()
+        SubjectOptions subjectOption = SubjectOptions.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -211,7 +211,7 @@ class SubjectOptionServiceTest {
                 .name("testing")
                 .build();
 
-        Page<SubjectOption> page = new PageImpl<>(List.of(subjectOption));
+        Page<SubjectOptions> page = new PageImpl<>(List.of(subjectOption));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(mapper.toResponse(subjectOption)).thenReturn(response);
@@ -231,7 +231,7 @@ class SubjectOptionServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<SubjectOption> page = new PageImpl<>(List.of());
+        Page<SubjectOptions> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
