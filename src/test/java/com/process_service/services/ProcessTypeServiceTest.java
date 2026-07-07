@@ -1,7 +1,7 @@
 package com.process_service.services;
 import com.process_service.dto.ProcessType.*;
 
-import com.process_service.entity.ProcessType;
+import com.process_service.entity.ProcessTypes;
 import com.process_service.mapper.ProcessTypeMapper;
 import com.process_service.repository.ProcessTypeRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -47,7 +47,7 @@ class ProcessTypeServiceTest {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        ProcessType entity = ProcessType.builder()
+        ProcessTypes entity = ProcessTypes.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -59,7 +59,7 @@ class ProcessTypeServiceTest {
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(ProcessType.class))).thenReturn(entity);
+        when(repository.save(any(ProcessTypes.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
         ProcessTypeResponse result = service.create(dto);
@@ -72,14 +72,14 @@ class ProcessTypeServiceTest {
     public void deleteById_WhenProcessTypeExists_DeleteProcessType() {
         UUID id = UUID.randomUUID();
 
-        ProcessType processType = ProcessType.builder()
+        ProcessTypes processType = ProcessTypes.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(repository.findById(id)).thenReturn(Optional.of(processType));
 
-        service.deleteById(id);
+        service.delete(id);
 
         assertNotNull(processType.getDeletedAt());
 
@@ -92,7 +92,7 @@ class ProcessTypeServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -101,7 +101,7 @@ class ProcessTypeServiceTest {
     public void findById_WhenProcessTypeExists_FindProcessType() {
         UUID id = UUID.randomUUID();
 
-        ProcessType processType = ProcessType.builder()
+        ProcessTypes processType = ProcessTypes.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -113,7 +113,7 @@ class ProcessTypeServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(processType));
         when(mapper.toResponse(processType)).thenReturn(response);
 
-        ProcessTypeResponse result = service.findById(id);
+        ProcessTypeResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -125,7 +125,7 @@ class ProcessTypeServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -141,14 +141,14 @@ class ProcessTypeServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        ProcessType processType = ProcessType.builder()
+        ProcessTypes processType = ProcessTypes.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        ProcessType saved = ProcessType.builder()
+        ProcessTypes saved = ProcessTypes.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -165,7 +165,7 @@ class ProcessTypeServiceTest {
         when(repository.save(processType)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        ProcessTypeResponse result = service.updateById(id, updated);
+        ProcessTypeResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing-name", result.name());
@@ -186,7 +186,7 @@ class ProcessTypeServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -203,7 +203,7 @@ class ProcessTypeServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        ProcessType processType = ProcessType.builder()
+        ProcessTypes processType = ProcessTypes.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -212,7 +212,7 @@ class ProcessTypeServiceTest {
                 .name("testing")
                 .build();
 
-        Page<ProcessType> page = new PageImpl<>(List.of(processType));
+        Page<ProcessTypes> page = new PageImpl<>(List.of(processType));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(mapper.toResponse(processType)).thenReturn(response);
@@ -232,7 +232,7 @@ class ProcessTypeServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<ProcessType> page = new PageImpl<>(List.of());
+        Page<ProcessTypes> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 

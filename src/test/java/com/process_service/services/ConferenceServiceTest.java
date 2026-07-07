@@ -5,6 +5,7 @@ import com.process_service.dto.Conference.ConferenceDTO;
 import com.process_service.dto.Conference.ConferenceFilter;
 import com.process_service.dto.Conference.ConferenceResponse;
 import com.process_service.dto.Conference.UpdateConferenceRequest;
+import com.process_service.entity.Conferences;
 import com.process_service.mapper.ConferenceMapper;
 import com.process_service.repository.ConferenceRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -50,7 +51,7 @@ class ConferenceServiceTest {
                 .active(true)
                 .build();
 
-        Conference entity = Conference.builder()
+        Conferences entity = Conferences.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -63,7 +64,7 @@ class ConferenceServiceTest {
                 .build();
 
         when(conferenceMapper.toEntity(dto)).thenReturn(entity);
-        when(conferenceRepository.save(any(Conference.class))).thenReturn(entity);
+        when(conferenceRepository.save(any(Conferences.class))).thenReturn(entity);
         when(conferenceMapper.toResponse(entity)).thenReturn(response);
 
         ConferenceResponse result = conferenceService.create(dto);
@@ -76,14 +77,14 @@ class ConferenceServiceTest {
     public void deleteById_WhenConferenceExists_DeleteConference() {
         UUID id = UUID.randomUUID();
 
-        Conference process = Conference.builder()
+        Conferences process = Conferences.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(conferenceRepository.findById(id)).thenReturn(Optional.of(process));
 
-        conferenceService.deleteById(id);
+        conferenceService.delete(id);
 
         assertNotNull(process.getDeletedAt());
 
@@ -97,7 +98,7 @@ class ConferenceServiceTest {
 
         when(conferenceRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> conferenceService.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> conferenceService.delete(id));
 
         verify(conferenceRepository, never()).save(any());
     }
@@ -106,7 +107,7 @@ class ConferenceServiceTest {
     public void findById_WhenConferenceExists_FindConference() {
         UUID id = UUID.randomUUID();
 
-        Conference situation = Conference.builder()
+        Conferences situation = Conferences.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -118,7 +119,7 @@ class ConferenceServiceTest {
         when(conferenceRepository.findById(id)).thenReturn(Optional.of(situation));
         when(conferenceMapper.toResponse(situation)).thenReturn(response);
 
-        ConferenceResponse result = conferenceService.findById(id);
+        ConferenceResponse result = conferenceService.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -131,7 +132,7 @@ class ConferenceServiceTest {
 
         when(conferenceRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> conferenceService.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> conferenceService.get(id));
 
         verify(conferenceRepository, never()).save(any());
     }
@@ -146,12 +147,12 @@ class ConferenceServiceTest {
                 .slug("test")
                 .build();
 
-        Conference conference = Conference.builder()
+        Conferences conference = Conferences.builder()
                 .id(id)
                 .name("old testing")
                 .build();
 
-        Conference saved = Conference.builder()
+        Conferences saved = Conferences.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -165,7 +166,7 @@ class ConferenceServiceTest {
         when(conferenceRepository.save(conference)).thenReturn(saved);
         when(conferenceMapper.toResponse(saved)).thenReturn(response);
 
-        ConferenceResponse result = conferenceService.updateById(id, updated);
+        ConferenceResponse result = conferenceService.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -187,7 +188,7 @@ class ConferenceServiceTest {
 
         when(conferenceRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> conferenceService.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> conferenceService.update(id, updated));
         verify(conferenceRepository, never()).save(any());
         verify(conferenceMapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -204,7 +205,7 @@ class ConferenceServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Conference conference = Conference.builder()
+        Conferences conference = Conferences.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -213,7 +214,7 @@ class ConferenceServiceTest {
                 .name("testing")
                 .build();
 
-        Page<Conference> page = new PageImpl<>(List.of(conference));
+        Page<Conferences> page = new PageImpl<>(List.of(conference));
 
         when(conferenceRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(conferenceMapper.toResponse(conference)).thenReturn(response);
@@ -233,7 +234,7 @@ class ConferenceServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Conference> page = new PageImpl<>(List.of());
+        Page<Conferences> page = new PageImpl<>(List.of());
 
         when(conferenceRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 

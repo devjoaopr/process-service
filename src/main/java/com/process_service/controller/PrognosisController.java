@@ -82,7 +82,7 @@ public class PrognosisController {
                     content = @Content(schema = @Schema(implementation = StandardResponse.class))
             )
     })
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<PrognosisResponse> update(@PathVariable UUID id, @RequestBody @Valid UpdatePrognosisRequest dto) {
         return ApiResponseBuilder.success(
                 service.update(id, dto), "Prognosis updated correctly."

@@ -6,19 +6,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Builder
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "conferences")
-public class Conferences {
+@Table(name = "situation_options")
+public class SituationOptions {
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;

@@ -4,6 +4,7 @@ import com.process_service.dto.ActionObject.ActionObjectDTO;
 import com.process_service.dto.ActionObject.ActionObjectFilter;
 import com.process_service.dto.ActionObject.ActionObjectResponse;
 import com.process_service.dto.ActionObject.UpdateActionObjectRequest;
+import com.process_service.entity.ActionObjects;
 import com.process_service.mapper.ActionObjectMapper;
 import com.process_service.repository.ActionObjectRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -49,7 +50,7 @@ class ActionObjectServiceTest {
                 .active(true)
                 .build();
 
-        ActionObject entity = ActionObject.builder()
+        ActionObjects entity = ActionObjects.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -62,10 +63,10 @@ class ActionObjectServiceTest {
                 .build();
 
         when(actionObjectMapper.toEntity(dto)).thenReturn(entity);
-        when(actionObjectRepository.save(any(ActionObject.class))).thenReturn(entity);
+        when(actionObjectRepository.save(any(ActionObjects.class))).thenReturn(entity);
         when(actionObjectMapper.toResponse(entity)).thenReturn(response);
 
-        ActionObjectResponse result = actionObjectService.createActionObject(dto);
+        ActionObjectResponse result = actionObjectService.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -75,14 +76,14 @@ class ActionObjectServiceTest {
     public void deleteById_WhenActionObjectExists_DeleteActionObject() {
         UUID id = UUID.randomUUID();
 
-        ActionObject process = ActionObject.builder()
+        ActionObjects process = ActionObjects.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(actionObjectRepository.findById(id)).thenReturn(Optional.of(process));
 
-        actionObjectService.deleteById(id);
+        actionObjectService.delete(id);
 
         assertNotNull(process.getDeletedAt());
 
@@ -96,7 +97,7 @@ class ActionObjectServiceTest {
 
         when(actionObjectRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> actionObjectService.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> actionObjectService.delete(id));
 
         verify(actionObjectRepository, never()).save(any());
     }
@@ -105,7 +106,7 @@ class ActionObjectServiceTest {
     public void findById_WhenActionObjectExists_FindActionObject() {
         UUID id = UUID.randomUUID();
 
-        ActionObject situation = ActionObject.builder()
+        ActionObjects situation = ActionObjects.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -117,7 +118,7 @@ class ActionObjectServiceTest {
         when(actionObjectRepository.findById(id)).thenReturn(Optional.of(situation));
         when(actionObjectMapper.toResponse(situation)).thenReturn(response);
 
-        ActionObjectResponse result = actionObjectService.findById(id);
+        ActionObjectResponse result = actionObjectService.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -130,7 +131,7 @@ class ActionObjectServiceTest {
 
         when(actionObjectRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> actionObjectService.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> actionObjectService.get(id));
 
         verify(actionObjectRepository, never()).save(any());
     }
@@ -145,12 +146,12 @@ class ActionObjectServiceTest {
                 .slug("test")
                 .build();
 
-        ActionObject actionObject = ActionObject.builder()
+        ActionObjects actionObject = ActionObjects.builder()
                 .id(id)
                 .name("old testing")
                 .build();
 
-        ActionObject saved = ActionObject.builder()
+        ActionObjects saved = ActionObjects.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -164,7 +165,7 @@ class ActionObjectServiceTest {
         when(actionObjectRepository.save(actionObject)).thenReturn(saved);
         when(actionObjectMapper.toResponse(saved)).thenReturn(response);
 
-        ActionObjectResponse result = actionObjectService.updateById(id, updated);
+        ActionObjectResponse result = actionObjectService.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -186,7 +187,7 @@ class ActionObjectServiceTest {
 
         when(actionObjectRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> actionObjectService.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> actionObjectService.update(id, updated));
         verify(actionObjectRepository, never()).save(any());
         verify(actionObjectMapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -203,7 +204,7 @@ class ActionObjectServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        ActionObject actionObject = ActionObject.builder()
+        ActionObjects actionObject = ActionObjects.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -212,7 +213,7 @@ class ActionObjectServiceTest {
                 .name("testing")
                 .build();
 
-        Page<ActionObject> page = new PageImpl<>(List.of(actionObject));
+        Page<ActionObjects> page = new PageImpl<>(List.of(actionObject));
 
         when(actionObjectRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(actionObjectMapper.toResponse(actionObject)).thenReturn(response);
@@ -232,7 +233,7 @@ class ActionObjectServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<ActionObject> page = new PageImpl<>(List.of());
+        Page<ActionObjects> page = new PageImpl<>(List.of());
 
         when(actionObjectRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 

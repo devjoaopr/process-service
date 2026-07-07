@@ -1,6 +1,6 @@
 package com.process_service.services;
 import com.process_service.dto.Detail.*;
-import com.process_service.entity.Detail;
+import com.process_service.entity.Details;
 import com.process_service.mapper.DetailMapper;
 import com.process_service.repository.DetailRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -46,7 +46,7 @@ class DetailServiceTest {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        Detail entity = Detail.builder()
+        Details entity = Details.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -58,7 +58,7 @@ class DetailServiceTest {
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Detail.class))).thenReturn(entity);
+        when(repository.save(any(Details.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
         DetailResponse result = service.create(dto);
@@ -71,14 +71,14 @@ class DetailServiceTest {
     public void deleteById_WhenDetailExists_DeleteDetail() {
         UUID id = UUID.randomUUID();
 
-        Detail detail = Detail.builder()
+        Details detail = Details.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(repository.findById(id)).thenReturn(Optional.of(detail));
 
-        service.deleteById(id);
+        service.delete(id);
 
         assertNotNull(detail.getDeletedAt());
 
@@ -91,7 +91,7 @@ class DetailServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -100,7 +100,7 @@ class DetailServiceTest {
     public void findById_WhenDetailExists_FindDetail() {
         UUID id = UUID.randomUUID();
 
-        Detail detail = Detail.builder()
+        Details detail = Details.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -112,7 +112,7 @@ class DetailServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(detail));
         when(mapper.toResponse(detail)).thenReturn(response);
 
-        DetailResponse result = service.findById(id);
+        DetailResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -124,7 +124,7 @@ class DetailServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -140,14 +140,14 @@ class DetailServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Detail detail = Detail.builder()
+        Details detail = Details.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Detail saved = Detail.builder()
+        Details saved = Details.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -164,7 +164,7 @@ class DetailServiceTest {
         when(repository.save(detail)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        DetailResponse result = service.updateById(id, updated);
+        DetailResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing-name", result.name());
@@ -185,7 +185,7 @@ class DetailServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -202,7 +202,7 @@ class DetailServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Detail detail = Detail.builder()
+        Details detail = Details.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -211,7 +211,7 @@ class DetailServiceTest {
                 .name("testing")
                 .build();
 
-        Page<Detail> page = new PageImpl<>(List.of(detail));
+        Page<Details> page = new PageImpl<>(List.of(detail));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(mapper.toResponse(detail)).thenReturn(response);
@@ -231,7 +231,7 @@ class DetailServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Detail> page = new PageImpl<>(List.of());
+        Page<Details> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
