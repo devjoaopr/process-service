@@ -82,7 +82,7 @@ class PrognosisServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.of(prognosis));
 
-        service.deleteById(id);
+        service.delete(id);
 
         assertNotNull(prognosis.getDeletedAt());
 
@@ -95,7 +95,7 @@ class PrognosisServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -116,7 +116,7 @@ class PrognosisServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(prognosis));
         when(mapper.toResponse(prognosis)).thenReturn(response);
 
-        PrognosisResponse result = service.findById(id);
+        PrognosisResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -128,7 +128,7 @@ class PrognosisServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -168,7 +168,7 @@ class PrognosisServiceTest {
         when(repository.save(prognosis)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        PrognosisResponse result = service.updateById(id, updated);
+        PrognosisResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing-name", result.name());
@@ -189,7 +189,7 @@ class PrognosisServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }

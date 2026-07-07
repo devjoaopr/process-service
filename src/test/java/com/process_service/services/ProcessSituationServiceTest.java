@@ -3,7 +3,7 @@ package com.process_service.services;
 
 import com.process_service.dto.ProcessSituation.*;
 
-import com.process_service.entity.ProcessSituation;
+import com.process_service.entity.ProcessSituations;
 import com.process_service.mapper.ProcessSituationMapper;
 import com.process_service.repository.ProcessSituationRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -50,7 +50,7 @@ class ProcessSituationServiceTest {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        ProcessSituation entity = ProcessSituation.builder()
+        ProcessSituations entity = ProcessSituations.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -63,10 +63,10 @@ class ProcessSituationServiceTest {
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(ProcessSituation.class))).thenReturn(entity);
+        when(repository.save(any(ProcessSituations.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
-        ProcessSituationResponse result = service.createProcessSituation(dto);
+        ProcessSituationResponse result = service.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -76,14 +76,14 @@ class ProcessSituationServiceTest {
     public void deleteById_WhenProcessSituationExists_DeleteProcessSituation() {
         UUID id = UUID.randomUUID();
 
-        ProcessSituation processSituation = ProcessSituation.builder()
+        ProcessSituations processSituation = ProcessSituations.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(repository.findById(id)).thenReturn(Optional.of(processSituation));
 
-        service.deleteById(id);
+        service.delete(id);
 
         assertNotNull(processSituation.getDeletedAt());
 
@@ -96,7 +96,7 @@ class ProcessSituationServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -105,7 +105,7 @@ class ProcessSituationServiceTest {
     public void findById_WhenProcessSituationExists_FindProcessSituation() {
         UUID id = UUID.randomUUID();
 
-        ProcessSituation processSituation = ProcessSituation.builder()
+        ProcessSituations processSituation = ProcessSituations.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -117,7 +117,7 @@ class ProcessSituationServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(processSituation));
         when(mapper.toResponse(processSituation)).thenReturn(response);
 
-        ProcessSituationResponse result = service.findById(id);
+        ProcessSituationResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -129,7 +129,7 @@ class ProcessSituationServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -146,7 +146,7 @@ class ProcessSituationServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        ProcessSituation processSituation = ProcessSituation.builder()
+        ProcessSituations processSituation = ProcessSituations.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
@@ -154,7 +154,7 @@ class ProcessSituationServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        ProcessSituation saved = ProcessSituation.builder()
+        ProcessSituations saved = ProcessSituations.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -171,7 +171,7 @@ class ProcessSituationServiceTest {
         when(repository.save(processSituation)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        ProcessSituationResponse result = service.updateById(id, updated);
+        ProcessSituationResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing-name", result.name());
@@ -192,7 +192,7 @@ class ProcessSituationServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).updateEntityFromDto(any(), any());
     }
@@ -209,7 +209,7 @@ class ProcessSituationServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        ProcessSituation processSituation = ProcessSituation.builder()
+        ProcessSituations processSituation = ProcessSituations.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -218,7 +218,7 @@ class ProcessSituationServiceTest {
                 .name("testing")
                 .build();
 
-        Page<ProcessSituation> page = new PageImpl<>(List.of(processSituation));
+        Page<ProcessSituations> page = new PageImpl<>(List.of(processSituation));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(mapper.toResponse(processSituation)).thenReturn(response);
@@ -238,7 +238,7 @@ class ProcessSituationServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<ProcessSituation> page = new PageImpl<>(List.of());
+        Page<ProcessSituations> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 

@@ -1,8 +1,9 @@
 package com.process_service.services;
-import com.process_service.dto.Origin.*;
-import com.process_service.entity.Origins;
-import com.process_service.repository.OriginRepository;
-import com.process_service.mapper.OriginMapper;
+
+import com.process_service.dto.Cases.*;
+import com.process_service.entity.Cases;
+import com.process_service.mapper.CasesMapper;
+import com.process_service.repository.CasesRepository;
 import com.process_service.shared.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,73 +21,78 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
-class OriginServiceTest {
+class CasesServiceTest {
 
     @Mock
-    private OriginRepository repository;
+    private CasesRepository repository;
 
     @Mock
-    private OriginMapper mapper;
+    private CasesMapper mapper;
 
     @InjectMocks
-    private OriginService service;
+    private CaseService service;
 
     @Test
-    public void originService_createOriginService_ReturnsOriginDTO() {
+    public void CasesService_createCasesService_ReturnsCasesDTO() {
 
-        OriginDTO dto = OriginDTO.builder()
-                .id(UUID.randomUUID())
-                .name("testing-origin")
-                .slug("testing-slug")
-                .createdAt(OffsetDateTime.now())
+        CasesDTO dto = CasesDTO.builder()
+                .name("testing")
+                .observation("what else?")
+                .entityName("testinnnnggggg")
                 .build();
 
-        Origins entity = Origins.builder()
+        Cases entity = Cases.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
-                .slug("testing-slug")
+                .observation("testing-slug")
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        OriginResponse response = OriginResponse.builder()
+        CasesResponse response = CasesResponse.builder()
                 .name("testing")
+                .observation("what else?")
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Origins.class))).thenReturn(entity);
+        when(repository.save(any(Cases.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
-        OriginResponse result = service.create(dto);
+        CasesResponse result = service.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
     }
 
     @Test
-    public void deleteById_WhenOriginExists_DeleteOrigin() {
+    public void deleteById_WhenCasesExists_DeleteCases() {
         UUID id = UUID.randomUUID();
 
-        Origins origin = Origins.builder()
+        Cases cases = Cases.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(origin));
+        when(repository.findById(id)).thenReturn(Optional.of(cases));
 
         service.delete(id);
 
-        assertNotNull(origin.getDeletedAt());
+        assertNotNull(cases.getDeletedAt());
 
-        verify(repository).save(origin);
+        verify(repository).save(cases);
     }
 
     @Test
-    public void deleteById_WhenOriginNotExists_ThrowsResourceNotFoundException() {
+    public void deleteById_WhenCasesNotExists_DeleteCases() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -97,29 +103,30 @@ class OriginServiceTest {
     }
 
     @Test
-    public void findById_WhenOriginExists_FindOrigin() {
+    public void findById_WhenCasesExists_FindCases() {
         UUID id = UUID.randomUUID();
 
-        Origins origin = Origins.builder()
+        Cases cases = Cases.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        OriginResponse response = OriginResponse.builder()
+        CasesResponse response = CasesResponse.builder()
                 .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(origin));
-        when(mapper.toResponse(origin)).thenReturn(response);
+        when(repository.findById(id)).thenReturn(Optional.of(cases));
+        when(mapper.toResponse(cases)).thenReturn(response);
 
-        OriginResponse result = service.get(id);
+        CasesResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
+
     }
 
     @Test
-    public void findById_WhenOriginNotExists_ThrowsResourceNotFoundException() {
+    public void findById_WhenCasesNotExists_FindCases() {
         UUID id = UUID.randomUUID();
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -130,58 +137,53 @@ class OriginServiceTest {
     }
 
     @Test
-    public void updateById_WhenOriginExists_UpdateOrigin() {
+    public void updateById_WhenCasesExists_Cases() {
         UUID id = UUID.randomUUID();
 
-        UpdateOriginRequest updated = UpdateOriginRequest.builder()
-                .id(id)
-                .name("testing-name")
-                .slug("testing-slug")
+        UpdateCasesRequest updated = UpdateCasesRequest.builder()
                 .updatedAt(OffsetDateTime.now())
+                .name("testing")
+                .observation("test")
                 .build();
 
-        Origins origin = Origins.builder()
+        Cases cases = Cases.builder()
                 .id(id)
-                .name("testing-name")
-                .slug("testing-slug")
-                .updatedAt(OffsetDateTime.now())
+                .name("old testing")
                 .build();
 
-        Origins saved = Origins.builder()
+        Cases saved = Cases.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
-        OriginResponse response = OriginResponse.builder()
-                .id(id)
-                .name("testing-name")
-                .slug("testing-slug")
-                .updatedAt(OffsetDateTime.now())
+        CasesResponse response = CasesResponse.builder()
+                .name("testing")
                 .build();
 
-        when(repository.findById(id)).thenReturn(Optional.of(origin));
-        doNothing().when(mapper).UpdateEntityFromDto(updated, origin);
-        when(repository.save(origin)).thenReturn(saved);
+        when(repository.findById(id)).thenReturn(Optional.of(cases));
+        doNothing().when(mapper).UpdateEntityFromDto(updated, cases);
+        when(repository.save(cases)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        OriginResponse result = service.update(id, updated);
+        CasesResponse result = service.update(id, updated);
 
         assertNotNull(result);
-        assertEquals("testing-name", result.name());
-        assertNotNull(origin.getUpdatedAt());
-        verify(mapper).UpdateEntityFromDto(updated, origin);
-        verify(repository).save(origin);
+        assertEquals("testing", result.name());
+        assertNotNull(cases.getUpdatedAt());
+        verify(mapper).UpdateEntityFromDto(updated, cases);
+        verify(repository).save(cases);
     }
 
     @Test
-    public void updateById_WhenOriginNotExists_ThrowsResourceNotFoundException() {
+    public void updateById_WhenCasesNotExists_UpdateCases() {
         UUID id = UUID.randomUUID();
 
-        UpdateOriginRequest updated = UpdateOriginRequest.builder()
+        UpdateCasesRequest updated = UpdateCasesRequest.builder()
                 .updatedAt(OffsetDateTime.now())
                 .name("testing")
-                .slug("test")
+                .observation("test")
                 .build();
+
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
@@ -191,32 +193,31 @@ class OriginServiceTest {
     }
 
     @Test
-    void findAll_WhenOriginExists_FindAllOrigins() {
+    void findAll_WhenCasesExists_FindAllCases() {
 
-        OriginFilter filter = new OriginFilter(
-                List.of("description"),
-                List.of("name"),
-                true,
-                List.of("slug")
+        CasesFilter filter = new CasesFilter(
+                List.of("some description"),
+                List.of("testing"),
+                List.of("test-slug")
         );
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Origins origin = Origins.builder()
+        Cases actionObject = Cases.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
 
-        OriginResponse response = OriginResponse.builder()
+        CasesResponse response = CasesResponse.builder()
                 .name("testing")
                 .build();
 
-        Page<Origins> page = new PageImpl<>(List.of(origin));
+        Page<Cases> page = new PageImpl<>(List.of(actionObject));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
-        when(mapper.toResponse(origin)).thenReturn(response);
+        when(mapper.toResponse(actionObject)).thenReturn(response);
 
-        Page<OriginResponse> result = service.findAll(filter, pageable);
+        Page<CasesResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -225,17 +226,17 @@ class OriginServiceTest {
     }
 
     @Test
-    void findAll_WhenOriginNotExists_ReturnsEmptyPage() {
-        OriginFilter filter = new OriginFilter(
-                null, null, null, null
+    void findAll_WhenCasesNotExists_FindAllCases() {
+        CasesFilter filter = new CasesFilter(
+                null,  null, null
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Origins> page = new PageImpl<>(List.of());
+        Page<Cases> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
-        Page<OriginResponse> result = service.findAll(filter, pageable);
+        Page<CasesResponse> result = service.findAll(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

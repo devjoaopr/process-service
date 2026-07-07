@@ -4,7 +4,7 @@ import com.process_service.dto.District.DistrictDTO;
 import com.process_service.dto.District.DistrictFilter;
 import com.process_service.dto.District.DistrictResponse;
 import com.process_service.dto.District.UpdateDistrictRequest;
-import com.process_service.entity.District;
+import com.process_service.entity.Districts;
 import com.process_service.mapper.DistrictMapper;
 import com.process_service.repository.DistrictRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -55,7 +55,7 @@ class DistrictServiceTest {
                 .build();
 
 
-        District entity = District.builder()
+        Districts entity = Districts.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -66,10 +66,10 @@ class DistrictServiceTest {
                 .build();
 
         when(districtMapper.toEntity(dto)).thenReturn(entity);
-        when(districtRepository.save(any(District.class))).thenReturn(entity);
+        when(districtRepository.save(any(Districts.class))).thenReturn(entity);
         when(districtMapper.toResponse(entity)).thenReturn(response);
 
-        DistrictResponse result = districtService.createDistrict(dto);
+        DistrictResponse result = districtService.create(dto);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -79,7 +79,7 @@ class DistrictServiceTest {
     public void deleteById_WhenDistrictExists_DeleteDistrict() {
         UUID id = UUID.randomUUID();
 
-        District process = District.builder()
+        Districts process = Districts.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -100,7 +100,7 @@ class DistrictServiceTest {
 
         when(districtRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> districtService.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> districtService.delete(id));
 
         verify(districtRepository, never()).save(any());
     }
@@ -109,7 +109,7 @@ class DistrictServiceTest {
     public void findById_WhenDistrictExists_FindDistrict() {
         UUID id = UUID.randomUUID();
 
-        District situation = District.builder()
+        Districts situation = Districts.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -121,7 +121,7 @@ class DistrictServiceTest {
         when(districtRepository.findById(id)).thenReturn(Optional.of(situation));
         when(districtMapper.toResponse(situation)).thenReturn(response);
 
-        DistrictResponse result = districtService.findById(id);
+        DistrictResponse result = districtService.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -134,7 +134,7 @@ class DistrictServiceTest {
 
         when(districtRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> districtService.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> districtService.get(id));
 
         verify(districtRepository, never()).save(any());
     }
@@ -155,7 +155,7 @@ class DistrictServiceTest {
                 .name("testing-name")
                 .build();
 
-        District actionObject = District.builder()
+        Districts actionObject = Districts.builder()
                 .updatedAt(OffsetDateTime.now())
                 .active(true)
                 .judicialRank("testing-judicial")
@@ -167,7 +167,7 @@ class DistrictServiceTest {
                 .name("testing-name")
                 .build();
 
-        District saved = District.builder()
+        Districts saved = Districts.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -188,7 +188,7 @@ class DistrictServiceTest {
         when(districtRepository.save(actionObject)).thenReturn(saved);
         when(districtMapper.toResponse(saved)).thenReturn(response);
 
-        DistrictResponse result = districtService.updateById(id, updated);
+        DistrictResponse result = districtService.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -210,7 +210,7 @@ class DistrictServiceTest {
 
         when(districtRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> districtService.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> districtService.update(id, updated));
         verify(districtRepository, never()).save(any());
         verify(districtMapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -234,7 +234,7 @@ class DistrictServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        District district = District.builder()
+        Districts district = Districts.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -243,7 +243,7 @@ class DistrictServiceTest {
                 .name("testing")
                 .build();
 
-        Page<District> page = new PageImpl<>(List.of(district));
+        Page<Districts> page = new PageImpl<>(List.of(district));
 
         when(districtRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(districtMapper.toResponse(district)).thenReturn(response);
@@ -260,10 +260,10 @@ class DistrictServiceTest {
     void findAll_WhenDistrictNotExists_FindAllDistricts() {
         DistrictFilter filter = new DistrictFilter(
                 null, null, null, null, null, null, null, null, null, null, null
-                );
+        );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<District> page = new PageImpl<>(List.of());
+        Page<Districts> page = new PageImpl<>(List.of());
 
         when(districtRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 

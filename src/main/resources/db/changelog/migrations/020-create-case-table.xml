@@ -43,6 +43,9 @@
             <column name="responsible_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
+            <column name="title" type="varchar(250)">
+                <constraints nullable="false"/>
+            </column>
             <column name="observation" type="text"/>
             <column name="created_by_id" type="uuid"/>
             <column name="updated_by_id" type="uuid"/>
@@ -53,7 +56,6 @@
             <column name="updated_at" type="timestamptz"/>
             <column name="deleted_at" type="timestamptz"/>
         </createTable>
-
         <addForeignKeyConstraint
                 baseTableName="tasks"
                 baseColumnNames="case_id"
@@ -62,6 +64,5 @@
                 referencedColumnNames="id"
                 onDelete="RESTRICT"
         />
-
     </changeSet>
 </databaseChangeLog>

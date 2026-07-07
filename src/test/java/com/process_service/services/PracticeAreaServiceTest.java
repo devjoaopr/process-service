@@ -1,7 +1,7 @@
 package com.process_service.services;
 
 import com.process_service.dto.PracticeArea.*;
-import com.process_service.entity.PracticeArea;
+import com.process_service.entity.PracticeAreas;
 import com.process_service.repository.PracticeAreaRepository;
 import com.process_service.mapper.PracticeAreaMapper;
 import com.process_service.shared.ResourceNotFoundException;
@@ -47,7 +47,7 @@ class PracticeAreaServiceTest {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        PracticeArea entity = PracticeArea.builder()
+        PracticeAreas entity = PracticeAreas.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -59,7 +59,7 @@ class PracticeAreaServiceTest {
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(PracticeArea.class))).thenReturn(entity);
+        when(repository.save(any(PracticeAreas.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
         PracticeAreaResponse result = service.create(dto);
@@ -72,14 +72,14 @@ class PracticeAreaServiceTest {
     public void deleteById_WhenPracticeAreaExists_DeletePracticeArea() {
         UUID id = UUID.randomUUID();
 
-        PracticeArea practiceArea = PracticeArea.builder()
+        PracticeAreas practiceArea = PracticeAreas.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(repository.findById(id)).thenReturn(Optional.of(practiceArea));
 
-        service.deleteById(id);
+        service.delete(id);
 
         assertNotNull(practiceArea.getDeletedAt());
 
@@ -92,7 +92,7 @@ class PracticeAreaServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -101,7 +101,7 @@ class PracticeAreaServiceTest {
     public void findById_WhenPracticeAreaExists_FindPracticeArea() {
         UUID id = UUID.randomUUID();
 
-        PracticeArea practiceArea = PracticeArea.builder()
+        PracticeAreas practiceArea = PracticeAreas.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -113,7 +113,7 @@ class PracticeAreaServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(practiceArea));
         when(mapper.toResponse(practiceArea)).thenReturn(response);
 
-        PracticeAreaResponse result = service.findById(id);
+        PracticeAreaResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -125,7 +125,7 @@ class PracticeAreaServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -141,14 +141,14 @@ class PracticeAreaServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        PracticeArea practiceArea = PracticeArea.builder()
+        PracticeAreas practiceArea = PracticeAreas.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        PracticeArea saved = PracticeArea.builder()
+        PracticeAreas saved = PracticeAreas.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -165,7 +165,7 @@ class PracticeAreaServiceTest {
         when(repository.save(practiceArea)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        PracticeAreaResponse result = service.updateById(id, updated);
+        PracticeAreaResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing-name", result.name());
@@ -186,7 +186,7 @@ class PracticeAreaServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -203,7 +203,7 @@ class PracticeAreaServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        PracticeArea practiceArea = PracticeArea.builder()
+        PracticeAreas practiceArea = PracticeAreas.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -212,7 +212,7 @@ class PracticeAreaServiceTest {
                 .name("testing")
                 .build();
 
-        Page<PracticeArea> page = new PageImpl<>(List.of(practiceArea));
+        Page<PracticeAreas> page = new PageImpl<>(List.of(practiceArea));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(mapper.toResponse(practiceArea)).thenReturn(response);
@@ -232,7 +232,7 @@ class PracticeAreaServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<PracticeArea> page = new PageImpl<>(List.of());
+        Page<PracticeAreas> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 

@@ -1,11 +1,10 @@
 package com.process_service.services;
 
-import com.process_service.dto.District.DistrictFilter;
 import com.process_service.dto.Locator.LocatorDTO;
 import com.process_service.dto.Locator.LocatorFilter;
 import com.process_service.dto.Locator.LocatorResponse;
 import com.process_service.dto.Locator.UpdateLocatorRequest;
-import com.process_service.entity.Locator;
+import com.process_service.entity.Locators;
 import com.process_service.mapper.LocatorMapper;
 import com.process_service.repository.LocatorRepository;
 import com.process_service.shared.ResourceNotFoundException;
@@ -52,7 +51,7 @@ class LocatorServiceTest {
                 .build();
 
 
-        Locator entity = Locator.builder()
+        Locators entity = Locators.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -63,7 +62,7 @@ class LocatorServiceTest {
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Locator.class))).thenReturn(entity);
+        when(repository.save(any(Locators.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
         LocatorResponse result = service.create(dto);
@@ -76,7 +75,7 @@ class LocatorServiceTest {
     public void deleteById_WhenLocatorExists_DeleteLocator() {
         UUID id = UUID.randomUUID();
 
-        Locator process = Locator.builder()
+        Locators process = Locators.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -97,7 +96,7 @@ class LocatorServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -106,7 +105,7 @@ class LocatorServiceTest {
     public void findById_WhenLocatorExists_FindLocator() {
         UUID id = UUID.randomUUID();
 
-        Locator situation = Locator.builder()
+        Locators situation = Locators.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -118,7 +117,7 @@ class LocatorServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(situation));
         when(mapper.toResponse(situation)).thenReturn(response);
 
-        LocatorResponse result = service.findById(id);
+        LocatorResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -131,7 +130,7 @@ class LocatorServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -150,14 +149,14 @@ class LocatorServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Locator locator = Locator.builder()
+        Locators locator = Locators.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Locator saved = Locator.builder()
+        Locators saved = Locators.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -177,7 +176,7 @@ class LocatorServiceTest {
         when(repository.save(locator)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        LocatorResponse result = service.updateById(id, updated);
+        LocatorResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -199,7 +198,7 @@ class LocatorServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -216,7 +215,7 @@ class LocatorServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Locator locator = Locator.builder()
+        Locators locator = Locators.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -225,7 +224,7 @@ class LocatorServiceTest {
                 .name("testing")
                 .build();
 
-        Page<Locator> page = new PageImpl<>(List.of(locator));
+        Page<Locators> page = new PageImpl<>(List.of(locator));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(mapper.toResponse(locator)).thenReturn(response);
@@ -245,7 +244,7 @@ class LocatorServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Locator> page = new PageImpl<>(List.of());
+        Page<Locators> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 

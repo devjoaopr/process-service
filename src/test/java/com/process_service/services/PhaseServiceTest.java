@@ -1,7 +1,7 @@
 package com.process_service.services;
 
 import com.process_service.dto.Phase.*;
-import com.process_service.entity.Phase;
+import com.process_service.entity.Phases;
 import com.process_service.repository.PhaseRepository;
 import com.process_service.mapper.PhaseMapper;
 import com.process_service.shared.ResourceNotFoundException;
@@ -48,7 +48,7 @@ class PhaseServiceTest {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        Phase entity = Phase.builder()
+        Phases entity = Phases.builder()
                 .id(UUID.randomUUID())
                 .name("testing-name")
                 .slug("testing-slug")
@@ -60,7 +60,7 @@ class PhaseServiceTest {
                 .build();
 
         when(mapper.toEntity(dto)).thenReturn(entity);
-        when(repository.save(any(Phase.class))).thenReturn(entity);
+        when(repository.save(any(Phases.class))).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(response);
 
         PhaseResponse result = service.create(dto);
@@ -73,14 +73,14 @@ class PhaseServiceTest {
     public void deleteById_WhenPhaseExists_DeletePhase() {
         UUID id = UUID.randomUUID();
 
-        Phase phase = Phase.builder()
+        Phases phase = Phases.builder()
                 .id(id)
                 .name("testing")
                 .build();
 
         when(repository.findById(id)).thenReturn(Optional.of(phase));
 
-        service.deleteById(id);
+        service.delete(id);
 
         assertNotNull(phase.getDeletedAt());
 
@@ -93,7 +93,7 @@ class PhaseServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(id));
 
         verify(repository, never()).save(any());
     }
@@ -102,7 +102,7 @@ class PhaseServiceTest {
     public void findById_WhenPhaseExists_FindPhase() {
         UUID id = UUID.randomUUID();
 
-        Phase phase = Phase.builder()
+        Phases phase = Phases.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -114,7 +114,7 @@ class PhaseServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(phase));
         when(mapper.toResponse(phase)).thenReturn(response);
 
-        PhaseResponse result = service.findById(id);
+        PhaseResponse result = service.get(id);
 
         assertNotNull(result);
         assertEquals("testing", result.name());
@@ -126,7 +126,7 @@ class PhaseServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> service.get(id));
 
         verify(repository, never()).save(any());
     }
@@ -142,14 +142,14 @@ class PhaseServiceTest {
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Phase phase = Phase.builder()
+        Phases phase = Phases.builder()
                 .id(id)
                 .name("testing-name")
                 .slug("testing-slug")
                 .updatedAt(OffsetDateTime.now())
                 .build();
 
-        Phase saved = Phase.builder()
+        Phases saved = Phases.builder()
                 .id(id)
                 .name("testing")
                 .build();
@@ -166,7 +166,7 @@ class PhaseServiceTest {
         when(repository.save(phase)).thenReturn(saved);
         when(mapper.toResponse(saved)).thenReturn(response);
 
-        PhaseResponse result = service.updateById(id, updated);
+        PhaseResponse result = service.update(id, updated);
 
         assertNotNull(result);
         assertEquals("testing-name", result.name());
@@ -187,7 +187,7 @@ class PhaseServiceTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> service.updateById(id, updated));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, updated));
         verify(repository, never()).save(any());
         verify(mapper, never()).UpdateEntityFromDto(any(), any());
     }
@@ -204,7 +204,7 @@ class PhaseServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Phase phase = Phase.builder()
+        Phases phase = Phases.builder()
                 .id(UUID.randomUUID())
                 .name("testing")
                 .build();
@@ -213,7 +213,7 @@ class PhaseServiceTest {
                 .name("testing")
                 .build();
 
-        Page<Phase> page = new PageImpl<>(List.of(phase));
+        Page<Phases> page = new PageImpl<>(List.of(phase));
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(mapper.toResponse(phase)).thenReturn(response);
@@ -233,7 +233,7 @@ class PhaseServiceTest {
         );
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Phase> page = new PageImpl<>(List.of());
+        Page<Phases> page = new PageImpl<>(List.of());
 
         when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
 
