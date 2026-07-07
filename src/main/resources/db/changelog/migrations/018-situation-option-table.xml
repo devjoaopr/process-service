@@ -33,5 +33,4 @@
 
         </createTable>
     </changeSet>
-
 </databaseChangeLog>
